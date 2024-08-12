@@ -1,0 +1,59 @@
+.skillContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.skillList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.skill {
+  padding: 1rem;
+  border: 0.125rem solid var(--color-black);
+}
+
+.fig {
+  border-color: var(--color-fig);
+  color: var(--color-fig);
+}
+.sk {
+  border-color: var(--color-sk);
+  color: var(--color-sk);
+}
+.fr {
+  border-color: var(--color-fr);
+  color: var(--color-fr);
+}
+.abs {
+  border-color: var(--color-abs);
+  color: var(--color-abs);
+}
+.zep {
+  border-color: var(--color-zep);
+  color: var(--color-zep);
+}
+.ph {
+  border-color: var(--color-ph);
+  color: var(--color-ph);
+}
+.ai {
+  border-color: var(--color-ai);
+  color: var(--color-ai);
+}
+.indd {
+  border-color: var(--color-indd);
+  color: var(--color-indd);
+}
+.ae {
+  border-color: var(--color-ae);
+  color: var(--color-ae);
+}
+.xd {
+  border-color: var(--color-xd);
+  color: var(--color-xd);
+}

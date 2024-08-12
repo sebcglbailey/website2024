@@ -1,0 +1,6 @@
+.workList {
+  width: 100%;
+  display: grid;
+  grid-template-columns: var(--container-cols);
+  gap: 1rem;
+}
