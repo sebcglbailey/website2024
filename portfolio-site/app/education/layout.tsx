@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
+
 import pageStyles from '../page.module.css';
+
+export const metadata: Metadata = {
+  title: "Sebastian Bailey | Education",
+  description: "Seb's educational background",
+};
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
