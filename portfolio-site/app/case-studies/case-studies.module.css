@@ -1,0 +1,48 @@
+.container {
+  text-align: left;
+}
+
+.intro {
+  font-size: 1.1rem !important;
+}
+
+.role span {
+  border-bottom: 0.125rem solid var(--color-black);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.numbers {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: space-evenly;
+  margin: 1rem 0;
+  padding: 0 1rem 1rem 1rem;
+  border-top: 1px solid var(--color-black);
+  border-bottom: 1px solid var(--color-black);
+  flex-wrap: wrap;
+}
+
+.numberInfo {
+  width: fit-content !important;
+  margin: 0 1rem;
+}
+.numberInfo span {
+  font-size: 5rem;
+  font-weight: 900;
+  margin: 0;
+  font-family: "Montserrat Alternates";
+}
+ .numberInfo p {
+  margin: 0;
+}
+
+.image span {
+  color: var(--color-grey);
+  font-size: 0.75rem;
+}

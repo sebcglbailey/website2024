@@ -1,9 +1,15 @@
 .card {
+  display: block;
   background: var(--color-white);
   width: 100%;
   box-shadow: 0 0.5rem 1rem -0.2rem var(--color-card-shadow);
   transition: all 0.35s ease;
   padding: 1rem;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
 }
 
 .card:hover {
