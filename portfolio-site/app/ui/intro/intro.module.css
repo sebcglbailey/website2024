@@ -1,0 +1,47 @@
+.introContainer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  align-items: center;
+}
+
+.introContainer h1 {
+  font-size: 6rem;
+}
+
+@media all and (max-width: 768px) {
+  .introContainer h1 {
+    font-size: 3.5rem;
+  }
+}
+
+.thingsContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  width: fit-content;
+}
+
+.introContainer span {
+  display: inline-block;
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+@media all and (max-width: 768px) {
+  .introContainer span {
+    font-size: 2rem;
+  }
+}
+
+.introThings {
+  display: flex;
+  flex-direction: column;
+}
+
+span.thing {
+  font-weight: 800;
+  border-bottom: 0.25rem solid var(--color-black);
+  width: fit-content;
+}
