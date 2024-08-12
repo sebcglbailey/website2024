@@ -70,7 +70,7 @@ export function Tokens() {
           width={2110}
           height={1365}
         />
-        <span>The new design system utilises Design Tokens, Style Dictionary and Figma's native 'variables' to easily switch between the different brands and themes we have built the components around.</span>
+        <span>The new design system utilises Design Tokens, Style Dictionary and Figma@apos;s native @apos;variables@apos; to easily switch between the different brands and themes we have built the components around.</span>
       </div>
     </>
   )
