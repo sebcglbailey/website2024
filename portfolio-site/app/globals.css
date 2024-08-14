@@ -46,6 +46,8 @@
   --max-width: 60rem;
 
   --container-cols: 1fr;
+
+  --breakpoint-med: 640px;
 }
 
 @media all and (min-width: 768px) {
