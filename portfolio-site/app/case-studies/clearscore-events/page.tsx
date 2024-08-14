@@ -147,13 +147,13 @@ export function Metrics() {
     <>
       <p>
         The purpose of running these events every year has been to cement the
-        relationships between ClearScore and it's partners, introducing them to
-        new technologies and ways of working with the company. Although the
-        investment into these events is clear, it's much harder to define the
-        ROI, but the relationships and contracts that come from these events are
-        strong and certainly help ClearScore to cement itself as a first choice
-        for a lot of the partners, ultimately leading to £millions in contracts
-        and revenue.
+        relationships between ClearScore and it&#39;s partners, introducing them
+        to new technologies and ways of working with the company. Although the
+        investment into these events is clear, it&#39;s much harder to define
+        the ROI, but the relationships and contracts that come from these events
+        are strong and certainly help ClearScore to cement itself as a first
+        choice for a lot of the partners, ultimately leading to £millions in
+        contracts and revenue.
         <br />
         <br />
         Playing a key part in the budget planning has also helped me to save{" "}

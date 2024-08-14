@@ -105,7 +105,7 @@ export function Tokens() {
         />
         <span>
           The new design system utilises Design Tokens, Style Dictionary and
-          Figma@apos;s native @apos;variables@apos; to easily switch between the
+          Figma&#39;s native &#39;variables&#39; to easily switch between the
           different brands and themes we have built the components around.
         </span>
       </div>
