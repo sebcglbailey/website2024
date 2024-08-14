@@ -1,3 +1,9 @@
+.contentContainer {
+  display: grid;
+  grid-template-columns: var(--container-cols);
+  gap: 1rem;
+}
+
 .container {
   text-align: left;
 }
@@ -6,6 +12,11 @@
   font-size: 1.1rem !important;
 }
 
+.role {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
 .role span {
   border-bottom: 0.125rem solid var(--color-black);
 }
@@ -34,9 +45,7 @@
 }
 .numberInfo span {
   font-size: 5rem;
-  font-weight: 900;
   margin: 0;
-  font-family: "Montserrat Alternates";
 }
  .numberInfo p {
   margin: 0;
@@ -45,4 +54,9 @@
 .image span {
   color: var(--color-grey);
   font-size: 0.75rem;
+}
+
+.youtube {
+  width: 100%;
+  aspect-ratio: 16 / 9;
 }

@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import Image from 'next/image';
-import clsx from 'clsx';
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Image from "next/image";
+import clsx from "clsx";
 
-import styles from './navigation.module.css';
+import styles from "./navigation.module.css";
 
 const links = [
   {
     name: "home",
-    href: "/"
+    href: "/",
   },
   // {
   //   name: "case studies",
@@ -19,13 +19,13 @@ const links = [
   // },
   {
     name: "work",
-    href: "/work"
+    href: "/work",
   },
   {
     name: "education",
-    href: "/education"
-  }
-]
+    href: "/education",
+  },
+];
 
 export default function Header() {
   const pathname = usePathname();
@@ -44,25 +44,22 @@ export default function Header() {
       <Link
         key={link.name}
         href={link.href}
-        className={clsx(
-          styles.navLink,
-          {
-            [styles.active]: pathname === link.href,
-          }
-        )}
+        className={clsx(styles.navLink, {
+          [styles.active]: pathname === link.href,
+        })}
       >
         {link.name}
       </Link>
-    )
-  })
+    );
+  });
 
-  return(
+  return (
     <div className={styles.navBar}>
       <div className={styles.logoBurgerWrapper}>
         <div className={styles.logo}>
-          <Link href='/'>
+          <Link href="/">
             <Image
-              src='/logo-white.svg'
+              src="/logo-white.svg"
               width={56}
               height={56}
               alt="Sebastian Bailey's Personal Logo"
@@ -71,12 +68,9 @@ export default function Header() {
         </div>
         <div
           onClick={handleBurgerClick}
-          className={clsx(
-            styles.burgerMenu,
-            {
-              [styles.active]: menuVisible,
-            },
-          )}
+          className={clsx(styles.burgerMenu, {
+            [styles.active]: menuVisible,
+          })}
         >
           <div className={styles.top} />
           <div className={styles.middle} />
@@ -85,28 +79,25 @@ export default function Header() {
       </div>
       <div
         onClick={handleMenuClick}
-        className={clsx(
-          styles.navigation,
-          {
-            [styles.active]: menuVisible,
-          },
-        )}
+        className={clsx(styles.navigation, {
+          [styles.active]: menuVisible,
+        })}
       >
         {navLinks}
         <Link
-          href='http://art.sebastianbailey.co.uk'
+          href="http://art.sebastianbailey.co.uk"
           className={styles.navLink}
-          target='_blank'
+          target="_blank"
         >
           art
         </Link>
         <Link
           className={styles.navLink}
-          href='mailto:sebcglbailey@gmail.com?subject=I%20Want%20Your%20Work&body=Let%27s%20talk%20about%20Seb%2C%20Bailey.%20Let%27s%20talk%20about%20you%20and%20me.'
+          href="mailto:sebcglbailey@gmail.com?subject=I%20Want%20Your%20Work&body=Let%27s%20talk%20about%20Seb%2C%20Bailey.%20Let%27s%20talk%20about%20you%20and%20me."
         >
           contact
         </Link>
       </div>
     </div>
-  )
+  );
 }

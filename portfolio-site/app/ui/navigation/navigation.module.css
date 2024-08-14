@@ -94,7 +94,7 @@
   transform: scaleX(1);
 }
 
-@media all and (max-width:640px) {
+@media all and (max-width: 640px) {
   .navBar {
     height: 3rem;
     padding: 0 0.5rem;
