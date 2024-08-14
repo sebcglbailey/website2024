@@ -3,13 +3,13 @@ import ContentCard from "../ui/cards/contentCard";
 import styles from "./case-studies.module.css";
 
 import {
-  Intro as DSIntro,
-  Overview as DSOverview,
-} from "./clearscore-design-system/page";
+  Slate_Intro,
+  Slate_Overview,
+} from "@/app/ui/case-studies/clearscore-design-system";
 import {
-  Intro as EvIntro,
-  Overview as EvOverview,
-} from "./clearscore-events/page";
+  Events_Intro,
+  Events_Overview,
+} from "@/app/ui/case-studies/clearscore-events";
 
 export default function Page() {
   return (
@@ -18,13 +18,13 @@ export default function Page() {
       <main className={styles.contentContainer}>
         <ContentCard href="./case-studies/clearscore-design-system">
           <h2>ClearScore Design System</h2>
-          <DSIntro />
-          <DSOverview />
+          <Slate_Intro />
+          <Slate_Overview />
         </ContentCard>
         <ContentCard href="./case-studies/clearscore-events">
           <h2>ClearScore Events</h2>
-          <EvIntro />
-          <EvOverview />
+          <Events_Intro />
+          <Events_Overview />
         </ContentCard>
       </main>
     </>
