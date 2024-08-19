@@ -33,11 +33,10 @@ export function Events_Overview() {
     <>
       <div className={csStyles.image}>
         <Image
-          src="/case-studies/clearscore-events/BTTU_Meditation.jpg"
+          src="/case-studies/clearscore-events/BTTU_Meditation.png"
           alt="Large industrial room with an LED screen at the end and a few dozen staff scattered around the room practicing meditation"
           width={1920}
           height={1280}
-          unoptimized
         />
         <span>
           ClearScore staff enjoy a moment of relaxation and meditation in the
@@ -112,7 +111,7 @@ export function Events_Demos() {
       </p>
       <div className={csStyles.image}>
         <Image
-          src="/case-studies/clearscore-events/BTTU_Demos.jpg"
+          src="/case-studies/clearscore-events/BTTU_Demos.png"
           alt="Industrial room filled with plants, posters, screens and people chatting"
           width={1920}
           height={1280}
@@ -209,7 +208,7 @@ export function Events_Assets() {
       </div>
       <div className={csStyles.image}>
         <Image
-          src="/case-studies/clearscore-events/BTTU_Team.jpg"
+          src="/case-studies/clearscore-events/BTTU_Team.png"
           alt="ClearScore team infront of a large LED screen, celebrating another successful year"
           width={1920}
           height={1280}
