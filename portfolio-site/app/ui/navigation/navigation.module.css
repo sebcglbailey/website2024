@@ -94,6 +94,17 @@
   transform: scaleX(1);
 }
 
+.button {
+  border: 0.125rem solid var(--color-black);
+  padding: 1rem;
+  background: transparent;
+}
+
+.button:focus {
+  outline-color: var(--color-orange);
+  outline-offset: 0.25rem;
+}
+
 @media all and (max-width: 640px) {
   .navBar {
     height: 3rem;
