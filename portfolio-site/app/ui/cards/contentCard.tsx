@@ -1,8 +1,17 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import styles from './cards.module.css';
+import styles from "./cards.module.css";
+import clsx from "clsx";
 
-export default function ContentCard({ children, href, isBlank }: { children: React.ReactNode, href?: string | null, isBlank?: boolean }) {
+export default function ContentCard({
+  children,
+  href,
+  isBlank,
+}: {
+  children: React.ReactNode;
+  href?: string | null;
+  isBlank?: boolean;
+}) {
   if (href) {
     return (
       <Link
@@ -10,18 +19,14 @@ export default function ContentCard({ children, href, isBlank }: { children: Rea
         className={styles.card}
         target={isBlank ? "_blank" : ""}
       >
-        <div className={styles.cardContent}>
-          {children}
-        </div>
+        <div className={styles.cardContent}>{children}</div>
       </Link>
-    )
+    );
   } else {
     return (
-      <div className={styles.card}>
-        <div className={styles.cardContent}>
-          {children}
-        </div>
+      <div className={clsx(styles.card)}>
+        <div className={styles.cardContent}>{children}</div>
       </div>
-    )
+    );
   }
 }

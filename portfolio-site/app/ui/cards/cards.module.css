@@ -12,7 +12,7 @@
   height: auto;
 }
 
-.card:not(.contentCard):hover {
+a.card:not(.contentCard):hover {
   box-shadow: 0 0.5rem 0.5rem -0.5rem rgba(var(--color-card-shadow), 0.5);
 }
 
@@ -63,7 +63,8 @@
   padding: 0.5rem;
   border: 0.125rem solid var(--color-black);
   min-width: 16rem;
-  /* border-radius: 0.25rem; */
+  background: transparent;
+  color: var(--color-black);
 }
 
 .input:focus {
