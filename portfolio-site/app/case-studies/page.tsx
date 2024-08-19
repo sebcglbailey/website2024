@@ -14,7 +14,6 @@ import {
 export default function Page() {
   return (
     <>
-      <h1>Case Studies</h1>
       <main className={styles.contentContainer}>
         <ContentCard href="./case-studies/clearscore-design-system">
           <h2>ClearScore Design System</h2>
