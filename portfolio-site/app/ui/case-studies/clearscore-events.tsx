@@ -37,6 +37,7 @@ export function Events_Overview() {
           alt="Large industrial room with an LED screen at the end and a few dozen staff scattered around the room practicing meditation"
           width={1920}
           height={1280}
+          unoptimized
         />
         <span>
           ClearScore staff enjoy a moment of relaxation and meditation in the
