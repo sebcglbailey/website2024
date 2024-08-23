@@ -10,13 +10,15 @@ import clsx from "clsx";
 
 export function Vision_Intro() {
   return (
-    <p className={csStyles.intro}>
-      Starting in 2020, the design team set out to redefine the core ClearScore
-      experience in an attempt to boost not just our users&apos; understanding
-      of their finances, but their whole experience of our product – and in the
-      process of doing so also our core metrics such as monthly active users and
-      conversion within the marketplace.
-    </p>
+    <>
+      <p className={csStyles.intro}>
+        Starting in 2020, the design team set out to redefine the core
+        ClearScore experience in an attempt to boost not just our users&apos;
+        understanding of their finances, but their whole experience of our
+        product – and in the process of doing so also our core metrics such as
+        monthly active users and conversion within the marketplace.
+      </p>
+    </>
   );
 }
 
@@ -35,35 +37,38 @@ export function Vision_Role() {
   );
 }
 
+export function Vision_Hero() {
+  return (
+    <div className={csStyles.image}>
+      <Image
+        src="/case-studies/clearscore-vision/wireframes.png"
+        alt="Wireframe sketches of the new ClearScore core product, showcasing two new screens"
+        width={1654}
+        height={1020}
+      />
+      <span>
+        The vision for the new ClearScore product has gone through many
+        iterations, but started out as any good major design project should,
+        with wireframes and significant user testing
+      </span>
+    </div>
+  );
+}
+
 export function Vision_Overview() {
   return (
-    <>
-      <div className={csStyles.image}>
-        <Image
-          src="/case-studies/clearscore-vision/wireframes.png"
-          alt="Wireframe sketches of the new ClearScore core product, showcasing two new screens"
-          width={1654}
-          height={1020}
-        />
-        <span>
-          The vision for the new ClearScore product has gone through many
-          iterations, but started out as any good major design project should,
-          with wireframes and significant user testing
-        </span>
-      </div>
-      <p>
-        My role in the ClearScore Vision project was to turn some great UX
-        Research and discovery into a concept for a usable product, including
-        but not limited to a complete overhaul of the Information Architecture
-        of our core product experience. We noticed some clear patterns early on
-        that our users would come to our product and not really know what to do
-        next, despite having come to us for a reason. Because of this, we
-        decided to focus our Information Architecture on the{" "}
-        <Link href="https://www.productplan.com/glossary/jobs-to-be-done-framework/">
-          Jobs To Be Done framework.
-        </Link>
-      </p>
-    </>
+    <p>
+      My role in the ClearScore Vision project was to turn some great UX
+      Research and discovery into a concept for a usable product, including but
+      not limited to a complete overhaul of the Information Architecture of our
+      core product experience. We noticed some clear patterns early on that our
+      users would come to our product and not really know what to do next,
+      despite having come to us for a reason. Because of this, we decided to
+      focus our Information Architecture on the{" "}
+      <Link href="https://www.productplan.com/glossary/jobs-to-be-done-framework/">
+        Jobs To Be Done framework.
+      </Link>
+    </p>
   );
 }
 
@@ -371,7 +376,7 @@ export function VisionPeek() {
   return (
     <>
       <Vision_Intro />
-      <Vision_Overview />
+      <Vision_Hero />
     </>
   );
 }
@@ -385,6 +390,7 @@ export default function Page() {
     <>
       <Vision_Intro />
       <Vision_Role />
+      <Vision_Hero />
       <Vision_Overview />
       <Vision_Numbers />
       <Vision_Start />
