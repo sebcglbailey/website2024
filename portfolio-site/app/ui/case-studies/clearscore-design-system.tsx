@@ -6,16 +6,16 @@ import {
   montserrat_alternates_bold,
 } from "@/app/ui/fonts";
 
-export function Slate_Intro() {
+const Slate_Intro = () => {
   return (
     <p className={csStyles.intro}>
       Leading a multi-displinary team to rebuild a multi-platform, multi-brand
       Design System from the ground up.
     </p>
   );
-}
+};
 
-export function Slate_Role() {
+const Slate_Role = () => {
   return (
     <div className={csStyles.role}>
       <p className={century_gothic_bold.className}>2024</p>
@@ -24,9 +24,9 @@ export function Slate_Role() {
       </p>
     </div>
   );
-}
+};
 
-export function Slate_Overview() {
+const Slate_Overview = () => {
   return (
     <>
       <div className={csStyles.image}>
@@ -54,9 +54,9 @@ export function Slate_Overview() {
       </p>
     </>
   );
-}
+};
 
-export function Slate_Numbers() {
+const Slate_Numbers = () => {
   return (
     <div className={csStyles.numbers}>
       <div className={csStyles.numberInfo}>
@@ -77,9 +77,9 @@ export function Slate_Numbers() {
       </div>
     </div>
   );
-}
+};
 
-export function Slate_Tokens() {
+const Slate_Tokens = () => {
   return (
     <>
       <p>
@@ -109,9 +109,9 @@ export function Slate_Tokens() {
       </div>
     </>
   );
-}
+};
 
-export function Slate_Team() {
+const Slate_Team = () => {
   return (
     <>
       <p>
@@ -139,9 +139,9 @@ export function Slate_Team() {
       </div>
     </>
   );
-}
+};
 
-export function Slate_Metrics() {
+const Slate_Metrics = () => {
   return (
     <div className={csStyles.numbers}>
       <div className={csStyles.numberInfo}>
@@ -154,9 +154,9 @@ export function Slate_Metrics() {
       </div>
     </div>
   );
-}
+};
 
-export function Slate_SDUI() {
+const Slate_SDUI = () => {
   return (
     <>
       <p>
@@ -187,9 +187,9 @@ export function Slate_SDUI() {
       </div>
     </>
   );
-}
+};
 
-export function Slate_SDUINumbers() {
+const Slate_SDUINumbers = () => {
   return (
     <div className={csStyles.numbers}>
       <div className={csStyles.numberInfo}>
@@ -205,5 +205,34 @@ export function Slate_SDUINumbers() {
         <p>Estimated savings with SDUI over 1 year</p>
       </div>
     </div>
+  );
+};
+
+export function SlatePeek() {
+  return (
+    <>
+      <Slate_Intro />
+      <Slate_Overview />
+    </>
+  );
+}
+
+export function Title() {
+  return <h1>ClearScore Design System</h1>;
+}
+
+export default function Page() {
+  return (
+    <>
+      <Slate_Intro />
+      <Slate_Role />
+      <Slate_Overview />
+      <Slate_Numbers />
+      <Slate_Tokens />
+      <Slate_Team />
+      <Slate_Metrics />
+      <Slate_SDUI />
+      <Slate_SDUINumbers />
+    </>
   );
 }

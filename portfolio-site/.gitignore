@@ -38,4 +38,4 @@ next-env.d.ts
 
 # seed
 /app/lib/access.ts
-/app/seed
+/seed

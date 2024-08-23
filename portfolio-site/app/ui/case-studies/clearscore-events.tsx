@@ -6,7 +6,7 @@ import {
   montserrat_alternates_bold,
 } from "@/app/ui/fonts";
 
-export function Events_Intro() {
+const Events_Intro = () => {
   return (
     <p className={csStyles.intro}>
       Every year in July, ClearScore hosts a spectacular event over two or three
@@ -15,9 +15,9 @@ export function Events_Intro() {
       a time of learning and relaxation.
     </p>
   );
-}
+};
 
-export function Events_Role() {
+const Events_Role = () => {
   return (
     <div className={csStyles.role}>
       <p className={century_gothic_bold.className}>2017 - 2022</p>
@@ -26,9 +26,9 @@ export function Events_Role() {
       </p>
     </div>
   );
-}
+};
 
-export function Events_Overview() {
+const Events_Overview = () => {
   return (
     <>
       <div className={csStyles.image}>
@@ -57,9 +57,9 @@ export function Events_Overview() {
       </p>
     </>
   );
-}
+};
 
-export function Events_Numbers() {
+const Events_Numbers = () => {
   return (
     <div className={csStyles.numbers}>
       <div className={csStyles.numberInfo}>
@@ -80,9 +80,9 @@ export function Events_Numbers() {
       </div>
     </div>
   );
-}
+};
 
-export function Events_Demos() {
+const Events_Demos = () => {
   return (
     <>
       <p>
@@ -138,9 +138,9 @@ export function Events_Demos() {
       </div>
     </>
   );
-}
+};
 
-export function Events_Metrics() {
+const Events_Metrics = () => {
   return (
     <>
       <p>
@@ -185,9 +185,9 @@ export function Events_Metrics() {
       </div>
     </>
   );
-}
+};
 
-export function Events_Assets() {
+const Events_Assets = () => {
   return (
     <>
       <div className={csStyles.image}>
@@ -195,10 +195,10 @@ export function Events_Assets() {
           className={csStyles.youtube}
           src="https://www.youtube.com/embed/rytyveyEMg0?si=Q0BVBUVRUnhl1GvL"
           title="ClearScore One:You Summer Event"
-          // frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           // referrerpolicy="strict-origin-when-cross-origin"
-          // allowfullscreen
+          allowFullScreen
         />
         <span>
           Involving the community, and having interesting and powerful speakers
@@ -220,6 +220,33 @@ export function Events_Assets() {
           throughout the day.
         </span>
       </div>
+    </>
+  );
+};
+
+export function EventsPeek() {
+  return (
+    <>
+      <Events_Intro />
+      <Events_Overview />
+    </>
+  );
+}
+
+export function Title() {
+  return <h1>ClearScore Events</h1>;
+}
+
+export default function Page() {
+  return (
+    <>
+      <Events_Intro />
+      <Events_Role />
+      <Events_Overview />
+      <Events_Numbers />
+      <Events_Demos />
+      <Events_Metrics />
+      <Events_Assets />
     </>
   );
 }

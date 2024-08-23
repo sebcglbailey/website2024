@@ -22,7 +22,6 @@ export default function Page() {
           return <p key={`intro-line-${index}`}>{line}</p>;
         })}
       </div>
-      <h2>Case Studies</h2>
       <CaseStudies />
       <h2>Work</h2>
       <Work />

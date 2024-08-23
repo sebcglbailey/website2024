@@ -60,3 +60,7 @@
   width: 100%;
   aspect-ratio: 16 / 9;
 }
+
+.underline {
+  border-bottom: 1px solid var(--color-black);
+}
