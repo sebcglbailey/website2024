@@ -195,10 +195,10 @@ const Events_Assets = () => {
           className={csStyles.youtube}
           src="https://www.youtube.com/embed/rytyveyEMg0?si=Q0BVBUVRUnhl1GvL"
           title="ClearScore One:You Summer Event"
-          // frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           // referrerpolicy="strict-origin-when-cross-origin"
-          // allowfullscreen
+          allowFullScreen
         />
         <span>
           Involving the community, and having interesting and powerful speakers
