@@ -1,11 +1,19 @@
 import Image from "next/image";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 
 import Intro from "./ui/intro/intro";
-import CaseStudies from "@/app/case-studies/page";
-import Work from "@/app/work/page";
+// import CaseStudies from "@/app/case-studies/page";
+// import Work from "@/app/work/page";
 import Education from "@/app/education/page";
 import SkillList from "./ui/sections/skills";
+
+const DynamicWork = dynamic(() => import("@/app/work/page"), {
+  ssr: false,
+});
+const DynamicCaseStudies = dynamic(() => import("@/app/case-studies/page"), {
+  ssr: false,
+});
 
 import { skills } from "./lib/skills";
 
@@ -22,9 +30,9 @@ export default function Page() {
           return <p key={`intro-line-${index}`}>{line}</p>;
         })}
       </div>
-      <CaseStudies />
+      <DynamicCaseStudies />
       <h2>Work</h2>
-      <Work />
+      <DynamicWork />
       <h2>Skills</h2>
 
       {/* Skill list */}
