@@ -1,7 +1,5 @@
 .contentContainer {
-  display: grid;
-  grid-template-columns: var(--container-cols);
-  gap: 1rem;
+  width: 100%;
 }
 
 .container {
@@ -63,4 +61,9 @@
 
 .underline {
   border-bottom: 1px solid var(--color-black);
+}
+
+.masonryContainer {
+  width: 100%;
+  box-sizing: border-box;
 }
