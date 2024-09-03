@@ -18,10 +18,11 @@ export default function LoginForm() {
   return (
     <div className={clsx(styles.card, styles.contentCard)}>
       <form action={formAction} className={styles.form}>
-        <div>
+        <div className={styles.username}>
           <label
-            className={montserrat_alternates_bold.className}
+            className={clsx(montserrat_alternates_bold.className)}
             htmlFor="username"
+            hidden
           >
             Username
           </label>
@@ -32,9 +33,11 @@ export default function LoginForm() {
             type="text"
             placeholder="Type Username"
             required
+            value="Guest"
+            hidden
           />
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <label
             className={montserrat_alternates_bold.className}
             htmlFor="password"

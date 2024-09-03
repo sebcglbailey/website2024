@@ -62,7 +62,7 @@ a.card:not(.contentCard):hover {
   flex-direction: column;
   gap: 2.5rem;
 }
-.form > div {
+.form .inputContainer {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -79,6 +79,10 @@ a.card:not(.contentCard):hover {
 .input:focus {
   outline-color: var(--color-orange);
   outline-offset: 0.25rem;
+}
+
+.username {
+  display: none;
 }
 
 .youtube {
