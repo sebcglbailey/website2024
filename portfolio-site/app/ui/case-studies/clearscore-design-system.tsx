@@ -43,7 +43,7 @@ const Slate_Overview = () => {
         </span>
       </div>
       <p>
-        Over the course of just 8 months, our cross functionaSlate_l team have
+        Over the course of just 9 months, our cross functional team has
         delivered a multi-platform, multi-branded Design System available for
         consumption across the business with over 90 components, ranging from
         the basic Buttons, to more complex and bespoke components for our core
@@ -72,7 +72,7 @@ const Slate_Numbers = () => {
         <p>Components</p>
       </div>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>8</span>
+        <span className={montserrat_alternates_bold.className}>9</span>
         <p>Months</p>
       </div>
     </div>
