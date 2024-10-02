@@ -17,7 +17,8 @@
 
 .mainIntro {
   padding: 4rem 0;
-  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1.5;
 }
 .mainIntro > p:not(:first-child) {
   margin-top: 1rem;
@@ -28,6 +29,15 @@
   flex-direction: column;
   gap: 4rem;
   padding: 6rem 1rem 0 1rem;
+}
+
+.mainIntro a {
+  color: var(--color-light-black);
+}
+
+.mainIntro a:hover, .mainIntro a:focus {
+  color: var(--color-black);
+  border-bottom: 1px solid var(--color-black);
 }
 
 .sectionContainer {
