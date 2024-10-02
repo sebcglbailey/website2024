@@ -22,7 +22,13 @@ const Events_Role = () => {
     <div className={csStyles.role}>
       <p className={century_gothic_bold.className}>2017 - 2022</p>
       <p>
-        <span>My role:</span> Lead Designer and Event Planner
+        <span className={century_gothic_bold.className}>My role:</span> Lead
+        Designer and Event Planner
+      </p>
+      <p>
+        <span className={century_gothic_bold.className}>Team:</span> 1x Senior
+        Event Planner, 1x Event Agency including junior and senior designers,
+        and production crew
       </p>
     </div>
   );
@@ -227,6 +233,7 @@ const Events_Assets = () => {
 export function EventsPeek() {
   return (
     <>
+      <Events_Role />
       <Events_Intro />
       <Events_Overview />
     </>

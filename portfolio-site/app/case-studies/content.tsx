@@ -11,6 +11,7 @@ import styles from "./case-studies.module.css";
 import { SlatePeek } from "@/app/ui/case-studies/clearscore-design-system";
 import { EventsPeek } from "@/app/ui/case-studies/clearscore-events";
 import { VisionPeek } from "@/app/ui/case-studies/clearscore-vision";
+import { AOCSPeek } from "@/app/ui/case-studies/clearscore-aocs";
 
 export default function Content() {
   const pathname = usePathname();
@@ -31,6 +32,11 @@ export default function Content() {
       href: "./case-studies/clearscore-events",
       title: "ClearScore Events",
       content: <EventsPeek />,
+    },
+    {
+      href: "./case-studies/clearscore-aocs",
+      title: "Apply on ClearScore",
+      content: <AOCSPeek />,
     },
   ]);
 
