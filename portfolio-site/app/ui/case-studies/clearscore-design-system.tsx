@@ -20,7 +20,13 @@ const Slate_Role = () => {
     <div className={csStyles.role}>
       <p className={century_gothic_bold.className}>2024</p>
       <p>
-        <span>My role:</span> Lead Designer and Product Owner
+        <span className={century_gothic_bold.className}>My role:</span> Lead
+        Designer and Product Owner
+      </p>
+      <p>
+        <span className={century_gothic_bold.className}>Team:</span> 1x Product
+        Manager, 1x Engineering Manager, 2x iOS Engineers, 2x Android Engineers,
+        3x Frontend Engineers, 1x Senior Test Engineer
       </p>
     </div>
   );
@@ -208,9 +214,57 @@ const Slate_SDUINumbers = () => {
   );
 };
 
+export function Slate_Learnings() {
+  return (
+    <>
+      <h2>Learnings</h2>
+      <p>
+        It&apos;s been an incredible journey over the first 9 months of the new
+        Design System project, building a fantastic amount over multiple
+        platforms and brands, but there are also plenty of learnings to be taken
+        from the project. Thankfully, this wasn&apos;t our first time, and so we
+        had already learnt from our past mistakes. Importantly, we started with
+        feedback early, and kept the feedback cycle going all through our build
+        and onboarding stages. This feedback has helped us to stay on top of the
+        most pressing issues and problems with what we were rolling out, and we
+        have been able to fix those before they were in significant use.
+      </p>
+      <ul className={csStyles.list}>
+        <p>
+          Other major learnings that we have been able to execute during the
+          project, have been:
+        </p>
+        <li>
+          Start small. Focus on smaller items such as the tokens and core
+          components; you get these right and the rest will follow.
+        </li>
+        <li>
+          Release early and often. Similar to the point above, the sooner we got
+          components and tokens out into the wild, before it was being used in
+          core projects, helped us to fine tune some of the details early on.
+        </li>
+        <li>
+          Align OS platforms early. Building a multi-platform design system,
+          it&apos;s important to align the components across the different
+          devices early, to establish a pattern of a shared language and
+          capabilities of components. This however, does not include and
+          platform-specific best practices of course, which are always important
+          to respect.
+        </li>
+        <li>
+          Start with layout and styling components first. This allows for quick
+          usage of the system over a broad range of the product, the quickest
+          way to gain alignment across your products.
+        </li>
+      </ul>
+    </>
+  );
+}
+
 export function SlatePeek() {
   return (
     <>
+      <Slate_Role />
       <Slate_Intro />
       <Slate_Overview />
     </>
@@ -233,6 +287,7 @@ export default function Page() {
       <Slate_Metrics />
       <Slate_SDUI />
       <Slate_SDUINumbers />
+      <Slate_Learnings />
     </>
   );
 }

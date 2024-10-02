@@ -25,13 +25,19 @@ export function Vision_Intro() {
 export function Vision_Role() {
   return (
     <div className={csStyles.role}>
-      <p className={century_gothic_bold.className}>2020 - Present</p>
+      <p className={century_gothic_bold.className}>2021 - Present</p>
       <p>
-        <span>My role:</span> Lead Product Designer
+        <span className={century_gothic_bold.className}>My role:</span> Lead
+        Product Designer
       </p>
       <p>
-        <span>Team:</span> 1x Lead Product Designer, 1x Lead UX Designer, 1x
-        Senior Product Designer
+        <span className={century_gothic_bold.className}>Core Team:</span> 1x
+        Lead Product Designer, 1x Lead UX Designer, 1x Senior Product Designer,
+        1x Senior Researcher
+      </p>
+      <p>
+        <span className={century_gothic_bold.className}>Team:</span> Multiple
+        full-stack squads over the past 3 years
       </p>
     </div>
   );
@@ -154,7 +160,7 @@ export function Vision_UX() {
         present to the C-Suite early sketches, ideas, analysis and principles.
         The personas and principles that I helped to establish were key drivers
         for a lot of the decicions that were made throughout the project, and
-        are still referenced today 4 years later.
+        are still referenced today 3 years later.
       </p>
     </>
   );
@@ -284,7 +290,7 @@ export function Vision_UI() {
         showcase to leadership and the rest of the company. These vision pieces
         were used through multiple presentations, both ones that I presented,
         and others that were taken to the C-Suite and Board. Although designs
-        for our verticals have changed in the 4 years since first developing
+        for our verticals have changed in the 3 years since first developing
         these, there are key aspects of the ideas behind it that have made their
         way into the product and helped improve usability and experience
         significantly.
@@ -363,7 +369,7 @@ const Vision_CH = () => {
           allowFullScreen
         />
         <span>
-          Coming in November of 2024, is the culmination of 4 years of hard work
+          Coming in November of 2024, is the culmination of 3 years of hard work
           from across the team to bring the majority of the ideas set out in the
           ClearScore Vision project
         </span>
@@ -372,9 +378,39 @@ const Vision_CH = () => {
   );
 };
 
+const Vision_Learnings = () => {
+  return (
+    <>
+      <h2>Learnings</h2>
+      <p>
+        After almost 4 years since the inception of the vision project,
+        I&apos;ve been in and out of smaller projects to help get the overall
+        vision over the line. There have been multiple squads and many changes
+        since the original ideas, but most of the concept and core functionality
+        remains the same. Over the years, the learnings of the project have been
+        increasingly interesting, but also frustratingly iterative. To do this
+        again, I would love to have been able to dedicate a singular team to
+        pushing the concept and defining it more solidly, rather than handing it
+        over to many different squads and areas of the business to work on their
+        own areas.
+        <br />
+        <br />
+        There have been incredible benefits to the work, but it has taken a
+        little longer than it maybe could have, and I believe this has been down
+        to being too iterative with some of the bigger changes, and not
+        necessarily making bigger bets. Although the research on the project was
+        detailed and thorough, it has not been able to determine some of the
+        larger bets and successes, which we were only able to establish through
+        testing the features live.
+      </p>
+    </>
+  );
+};
+
 export function VisionPeek() {
   return (
     <>
+      <Vision_Role />
       <Vision_Intro />
       <Vision_Hero />
     </>
@@ -400,6 +436,7 @@ export default function Page() {
       <Vision_UI />
       <Vision_Final_Numbers />
       <Vision_CH />
+      <Vision_Learnings />
     </>
   );
 }
