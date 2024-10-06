@@ -88,3 +88,17 @@ a.card:not(.contentCard):hover {
 .youtube {
   border-width: 0;
 }
+
+.loginContainer {
+  max-width: 20rem;
+}
+.loginContainer p {
+  margin-top: 1.5rem;
+}
+.loginContainer a {
+  color: var(--color-orange);
+}
+.loginContainer a:hover, .loginContainer a:focus {
+  color: var(--color-black);
+  border-bottom: 1px solid var(--color-black);
+}

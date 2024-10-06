@@ -93,6 +93,7 @@ export default function Header() {
         </Link>
         <Link
           className={styles.navLink}
+          target="_blank"
           href="mailto:sebcglbailey@gmail.com?subject=I%20Want%20Your%20Work&body=Let%27s%20talk%20about%20Seb%2C%20Bailey.%20Let%27s%20talk%20about%20you%20and%20me."
         >
           contact

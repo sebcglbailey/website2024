@@ -10,6 +10,7 @@ import styles from "./case-studies.module.css";
 
 import { SlatePeek } from "@/app/ui/case-studies/clearscore-design-system";
 import { EventsPeek } from "@/app/ui/case-studies/clearscore-events";
+import { LeadershipPeek } from "../ui/case-studies/leadership";
 import { VisionPeek } from "@/app/ui/case-studies/clearscore-vision";
 import { AOCSPeek } from "@/app/ui/case-studies/clearscore-aocs";
 
@@ -27,6 +28,11 @@ export default function Content() {
       href: "./case-studies/clearscore-vision",
       title: "ClearScore Vision",
       content: <VisionPeek />,
+    },
+    {
+      href: "./case-studies/leadership",
+      title: "Leadership",
+      content: <LeadershipPeek />,
     },
     {
       href: "./case-studies/clearscore-events",
