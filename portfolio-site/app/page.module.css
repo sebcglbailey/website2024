@@ -32,7 +32,7 @@
 }
 
 .mainIntro a {
-  color: var(--color-light-black);
+  color: var(--color-orange);
 }
 
 .mainIntro a:hover, .mainIntro a:focus {

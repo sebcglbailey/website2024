@@ -2,10 +2,15 @@
 
 import { useFormState } from "react-dom";
 import { authenticate } from "@/app/lib/actions";
+import Link from "next/link";
 
 import Button from "../navigation/button";
 
-import { montserrat_alternates_bold, century_gothic } from "../fonts";
+import {
+  montserrat_alternates_bold,
+  century_gothic,
+  century_gothic_bold,
+} from "../fonts";
 
 import styles from "./cards.module.css";
 import clsx from "clsx";
@@ -16,7 +21,7 @@ export default function LoginForm() {
     undefined
   );
   return (
-    <div className={clsx(styles.card, styles.contentCard)}>
+    <div className={styles.loginContainer}>
       <form action={formAction} className={styles.form}>
         <div className={styles.username}>
           <label
@@ -60,6 +65,19 @@ export default function LoginForm() {
           </>
         )}
       </form>
+      <p>
+        Due to sensitive information, you will require a password to access the
+        details of my case studies. If you do not have access and would like
+        find out more, please{" "}
+        <Link
+          className={century_gothic_bold.className}
+          target="_blank"
+          href="mailto:sebcglbailey@gmail.com?subject=I%20Want%20Your%20Work&body=Let%27s%20talk%20about%20Seb%2C%20Bailey.%20Let%27s%20talk%20about%20you%20and%20me."
+        >
+          reach out to me
+        </Link>
+        .
+      </p>
     </div>
   );
 }

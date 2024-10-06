@@ -73,3 +73,13 @@
 .list li {
   margin: 0.5rem 0 0.5rem 1.5rem;
 }
+
+.container a {
+  color: var(--color-orange);
+  border: none;
+}
+
+.smallImage {
+  max-width: 20rem;
+  margin: auto;
+}
