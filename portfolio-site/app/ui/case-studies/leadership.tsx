@@ -165,9 +165,9 @@ const Leadership_Strategy = () => {
         that myself and my team spend a decent amount of time on discovery and
         in the concept stage. Research on competitors, what problems a user is
         facing, and testing early prototypes are all tools to help define a
-        fantastic vision. But, there's no use creating a world-class design if
-        you cannot then turn that into delivering a world-class product. To help
-        get buy-in on a project and solution, I will build out inspiring
+        fantastic vision. But, there&apos;s no use creating a world-class design
+        if you cannot then turn that into delivering a world-class product. To
+        help get buy-in on a project and solution, I will build out inspiring
         high-fidelity prototypes and create a story around a project. I will
         ensure that everyone involved is fully invested and up to date with the
         vision and principles behind a project. Not only this, but involving the
@@ -218,7 +218,7 @@ const Leadership_Learnings = () => {
       <h2>Learnings</h2>
       <p>
         Through the years I have spent as a leader in design, I have learnt that
-        the most important part to any design team is it's people and the
+        the most important part to any design team is it&apos;s people and the
         culture within it. A team that work and play together is one that is
         close and willing to challenge each other, as well as work hard at the
         problems that they are invested in. I choose team members based on their
