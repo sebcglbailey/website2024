@@ -1,75 +1,75 @@
-import styles from './sections.module.css';
+import styles from "./sections.module.css";
 
-import clsx from 'clsx';
+import clsx from "clsx";
 
-export default function SkillList(
-{
+export default function SkillList({
   title,
-  skills
-}:
-{
-  title: string,
-  skills: string[]
+  skills,
+}: {
+  title: string;
+  skills: string[];
 }) {
-
   const getSkillClass = (skill: string) => {
     switch (skill) {
       case "Figma":
-        return styles.fig
+        return styles.fig;
         break;
       case "Sketch":
-        return styles.sk
+        return styles.sk;
         break;
       case "Framer":
-        return styles.fr
+        return styles.fr;
+        break;
+      case "Notion":
+        return styles.no;
         break;
       case "Abstract":
-        return styles.abs
+        return styles.abs;
         break;
       case "Zeplin":
-        return styles.zep
+        return styles.zep;
         break;
       case "Photoshop":
-        return styles.ph
+        return styles.ph;
         break;
       case "Illustrator":
-        return styles.ai
+        return styles.ai;
         break;
       case "InDesign":
-        return styles.indd
+        return styles.indd;
         break;
       case "After Effects":
-        return styles.ae
+        return styles.ae;
         break;
       case "Adobe XD":
-        return styles.xd
+        return styles.xd;
+        break;
+      case "Powerpoint":
+        return styles.ppt;
+        break;
+      case "Keynote":
+        return styles.key;
+        break;
+      case "Excel":
+        return styles.xl;
         break;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
-  const skillList = skills.map(skill => {
-
+  const skillList = skills.map((skill) => {
     return (
-      <div
-        key={skill}
-        className={clsx(
-          styles.skill,
-          getSkillClass(skill)
-        )}
-      >
+      <div key={skill} className={clsx(styles.skill, getSkillClass(skill))}>
         {skill}
       </div>
-    )
-  })
+    );
+  });
 
   return (
     <div className={styles.skillContainer}>
       <h3>{title}</h3>
-      <div className={styles.skillList}>
-        {skillList}
-      </div>
+      <div className={styles.skillList}>{skillList}</div>
     </div>
-  )
+  );
 }

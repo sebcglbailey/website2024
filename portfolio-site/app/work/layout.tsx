@@ -1,6 +1,6 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-import pageStyles from '../page.module.css';
+import pageStyles from "../page.module.css";
 
 export const metadata: Metadata = {
   title: "Sebastian Bailey | Work",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={pageStyles.pageContainer}>
-      <h1>Work</h1>
+      <h1>Experience</h1>
       {children}
     </div>
   );

@@ -12,7 +12,7 @@ export function Vision_Intro() {
   return (
     <>
       <p className={csStyles.intro}>
-        Starting in 2020, the design team set out to redefine the core
+        Starting in 2021, the design team set out to redefine the core
         ClearScore experience in an attempt to boost not just our users&apos;
         understanding of their finances, but their whole experience of our
         product – and in the process of doing so also our core metrics such as
@@ -71,7 +71,10 @@ export function Vision_Overview() {
       users would come to our product and not really know what to do next,
       despite having come to us for a reason. Because of this, we decided to
       focus our Information Architecture on the{" "}
-      <Link href="https://www.productplan.com/glossary/jobs-to-be-done-framework/">
+      <Link
+        className={century_gothic_bold.className}
+        href="https://www.productplan.com/glossary/jobs-to-be-done-framework/"
+      >
         Jobs To Be Done framework.
       </Link>
     </p>
