@@ -18,7 +18,7 @@ const links = [
     href: "/case-studies",
   },
   {
-    name: "work",
+    name: "experience",
     href: "/work",
   },
   {

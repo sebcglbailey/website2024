@@ -2,6 +2,7 @@ export const skills = {
   software: [
     "Figma",
     "Sketch",
+    "Notion",
     "Framer",
     "Abstract",
     "Zeplin",
@@ -10,6 +11,20 @@ export const skills = {
     "InDesign",
     "After Effects",
     "Adobe XD",
+    "Powerpoint",
+    "Keynote",
+    "Excel",
+  ],
+  leadership: [
+    "Management",
+    "Coaching",
+    "Strategy",
+    "Vision",
+    "Presentation",
+    "OKR setting",
+    "Prioritisation",
+    "Cross-functional collaboration",
+    "Analysis",
   ],
   process: [
     "Concept Design",

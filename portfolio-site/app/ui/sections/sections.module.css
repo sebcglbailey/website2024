@@ -57,3 +57,19 @@
   border-color: var(--color-xd);
   color: var(--color-xd);
 }
+.no {
+  border-color: var(--color-no);
+  color: var(--color-no);
+}
+.xl {
+  border-color: var(--color-xl);
+  color: var(--color-xl);
+}
+.ppt {
+  border-color: var(--color-ppt);
+  color: var(--color-ppt);
+}
+.key {
+  border-color: var(--color-key);
+  color: var(--color-key);
+}

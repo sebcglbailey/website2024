@@ -42,7 +42,7 @@ export default function Page() {
         columnGutter={16}
         render={MasonryCard}
         columnWidth={380}
-        overscanBy={5}
+        overscanBy={20}
       />
     </main>
   );

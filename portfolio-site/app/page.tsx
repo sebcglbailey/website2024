@@ -102,13 +102,14 @@ export default function Page() {
         </p>
       </div>
       <DynamicCaseStudies />
-      <h2>Work</h2>
+      <h2>Experience</h2>
       <DynamicWork />
       <h2>Skills</h2>
 
       {/* Skill list */}
 
       <SkillList title="Software" skills={skills.software} />
+      <SkillList title="Leadership" skills={skills.leadership} />
       <SkillList title="Process" skills={skills.process} />
       <SkillList title="Development" skills={skills.development} />
 
