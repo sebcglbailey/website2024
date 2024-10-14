@@ -30,8 +30,14 @@ export default function Page() {
         <p>
           A varied background in Architecture, Graphic Design, Web Development
           and over 10 years in Product Design, has helped me to become the
-          enthusiastic creative technologist and versatile design leader that I
-          am today.
+          enthusiastic creative technologist and versatile{" "}
+          <Link
+            className={century_gothic_bold.className}
+            href="/case-studies/leadership"
+          >
+            design leader
+          </Link>{" "}
+          that I am today.
         </p>
         <p>
           I&apos;ve helped build ClearScore from 1 million users to over 22
