@@ -1,10 +1,23 @@
 export const experience = [
   {
+    id: "prediko",
+    title: "Prediko",
+    link: "http://www.prediko.io",
+    role: "Design Lead, Founding Designer",
+    dates: "Feb 2025 - Present",
+    info: [
+      "Currently helping to build out the Prediko smart inventory planner app for Shopify brands.",
+      "As founding designer, it is within my role to do pretty much everything, but my main focus is on complex product problems.",
+      "I own all aspects of design strategy and direction, as well as working closely with the CEO to establish the overall product direction.",
+      "Prediko is a data-heavy web-based app for Shopify stores to help customers better plan everything to do with their inventory, by showing them useful insights into their sales and suggesting the perfect time and amount to place Purchase Orders to avoid overstock or out of stock products."
+    ]
+  },
+  {
     id: "clearscore-ds",
     title: "ClearScore Technology Ltd.",
     link: "http://www.clearscore.com",
     role: "Platform Lead Designer & Design Systems Lead, Group",
-    dates: "Jan 2023 - Present",
+    dates: "Jan 2023 - Jan 2025",
     info: [
       "Owning and leading on platform capabilities across the ClearScore Group",
       "Vision and strategy for a mutli-platform and multi-brand Design System across multiple disciplines",
