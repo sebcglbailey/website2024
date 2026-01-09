@@ -24,12 +24,8 @@ export function Leadership_Role() {
     <div className={csStyles.role}>
       <p className={century_gothic_bold.className}>2018 - Present</p>
       <p>
-        <span className={century_gothic_bold.className}>My role:</span> Design
-        Leader
-      </p>
-      <p>
         <span className={century_gothic_bold.className}>Positions held:</span>{" "}
-        Design Manager, Lead Designer, International Design Lead, Product Owner
+        Founding Designer, International Design Lead (Acting Head), Lead Designer, Design Manager, Product Owner
       </p>
     </div>
   );
@@ -53,21 +49,21 @@ const Leadership_Sourcing = () => {
     <>
       <h2>Sourcing and Hiring</h2>
       <p>
-        Throughout the past 6 years, I have had the opportunity to not only lead
-        my own teams, but help build out the ClearScore Design team as a whole
+        Throughout the past 7 years, I have had the opportunity to not only lead
+        my own teams, but fundamentally help build out the ClearScore Design team
         from 3 designers to 50. I have played a pivotal role in sourcing and
         onboarding designers across the globe from juniors to Heads of Design.
       </p>
       <p>
-        To help build the fantastic design team at ClearScore, I have taken part
+        To help build the fantastic design team at ClearScore, I took part
         and led on countless screening, technical and behavioural interviews to
-        ensure we have been hiring the best talent. To help me do this, I always
+        ensure we were always hiring the best talent. As part of my hiring process, I always
         do my homework on a potential employee, ensuring that not only do we
         only focus our own efforts on the best candidates, but also so we do not
         waste anyone elses time if they aren&apos;t a good fit for the business.
-        I have helped to establish a rigid interview process across the
-        business, being a core member of the interviewing team for all roles,
-        not just in design. Every interview that I take part in will have a bank
+        I have helped establish a rigid interview processes across businesses,
+        and been a core member of interviewing teams for all roles,
+        not just design. Every interview that I take part in will have a bank
         of tried and tested questions that I can fall back on, but I much prefer
         to treat each individual interview as a conversation, to help the
         candidate feel at ease and to help them put their best foot forwards, as
