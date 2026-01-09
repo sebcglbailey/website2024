@@ -25,7 +25,7 @@ export function Vision_Intro() {
 export function Vision_Role() {
   return (
     <div className={csStyles.role}>
-      <p className={century_gothic_bold.className}>2021 - Present</p>
+      <p className={century_gothic_bold.className}>2021 - 2025</p>
       <p>
         <span className={century_gothic_bold.className}>My role:</span> Lead
         Product Designer

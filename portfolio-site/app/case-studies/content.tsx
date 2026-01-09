@@ -20,6 +20,11 @@ export default function Content() {
 
   const [content] = useState(() => [
     {
+      href: "./case-studies/leadership",
+      title: "Leadership",
+      content: <LeadershipPeek />,
+    },
+    {
       href: "./case-studies/clearscore-design-system",
       title: "ClearScore Design System",
       content: <SlatePeek />,
@@ -28,11 +33,6 @@ export default function Content() {
       href: "./case-studies/clearscore-vision",
       title: "ClearScore Vision",
       content: <VisionPeek />,
-    },
-    {
-      href: "./case-studies/leadership",
-      title: "Leadership",
-      content: <LeadershipPeek />,
     },
     {
       href: "./case-studies/clearscore-events",
