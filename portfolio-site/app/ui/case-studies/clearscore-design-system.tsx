@@ -18,7 +18,7 @@ const Slate_Intro = () => {
 const Slate_Role = () => {
   return (
     <div className={csStyles.role}>
-      <p className={century_gothic_bold.className}>2024</p>
+      <p className={century_gothic_bold.className}>2024 - 2025</p>
       <p>
         <span className={century_gothic_bold.className}>My role:</span> Lead
         Designer and Product Owner

@@ -13,12 +13,24 @@ import { EventsPeek } from "@/app/ui/case-studies/clearscore-events";
 import { LeadershipPeek } from "../ui/case-studies/leadership";
 import { VisionPeek } from "@/app/ui/case-studies/clearscore-vision";
 import { AOCSPeek } from "@/app/ui/case-studies/clearscore-aocs";
+import { PredikoRebrandPeek } from "../ui/case-studies/prediko-rebrand";
+import { ReplenishPeek } from "../ui/case-studies/prediko-replenish";
 
 export default function Content() {
   const pathname = usePathname();
   const HeaderTag = pathname.includes("case-studies") ? "h1" : "h2";
 
   const [content] = useState(() => [
+    {
+      href: "./case-studies/prediko-replenish",
+      title: "Prediko Replenish Inventory (Core Feature)",
+      content: <ReplenishPeek />,
+    },
+    {
+      href: "./case-studies/prediko-rebrand",
+      title: "Prediko Rebrand & Marketing Website",
+      content: <PredikoRebrandPeek />,
+    },
     {
       href: "./case-studies/leadership",
       title: "Leadership",
