@@ -39,15 +39,16 @@
 }
 
 .numberInfo {
-  width: fit-content !important;
+  /* width: fit-content !important; */
+  flex: 1;
   margin: 0 1rem;
 }
-.numberInfo span {
+.numberInfo > span {
   font-size: 3.5rem;
   margin: 0;
 }
 @media all and (min-width: 768px) {
-  .numberInfo span {
+  .numberInfo > span {
     font-size: 5rem;
   }
 }
@@ -79,7 +80,7 @@ p ~ .list {
 }
 
 .list li {
-  margin: 0.5rem 0 0.5rem 1.5rem;
+  margin: 0.5rem 0 0.75rem 1.5rem;
 }
 
 .container a {

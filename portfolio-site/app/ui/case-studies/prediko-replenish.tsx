@@ -38,17 +38,31 @@ const Replenish_Overview = () =>
       </span>
     </div>
     <p>
-      I led the end-to-end redesign of Prediko&apos;s core planning and replenishment experience.
+      I led the end-to-end redesign of Prediko&apos;s core planning and replenishment experience,
+      and in doing so, helped establish how the company approaches product design more broadly.
+    </p>
+    <p>
+      Prior to this project, product changes were largely reactive — driven by individual customer
+      requests or founder intuition, with little structured process behind them. Part of my remit
+      was to change that. I introduced a research-led approach to product development, bringing
+      customers and the sales team into a more active role in shaping the direction of the product,
+      and establishing a full design process for significant changes rather than building from
+      instinct alone.
+    </p>
+    <p>
       As the sole designer, I was responsible for setting the product vision for this area,
       running discovery and validation with customers, facilitating alignment across founders
       and engineering, and guiding the feature from early concept through to MVP release and
-      future iterations.
+      future iterations. The work also had a lasting impact on Prediko&apos;s long-term roadmap
+      — shifting the product&apos;s strategic focus toward helping customers understand and trust
+      the system&apos;s reasoning, rather than relying on blind automation or routinely overriding
+      its recommendations.
     </p>
   </>;
 
 const Replenish_Goal = () =>
   <>
-    <h3>Introduction</h3>
+    <h3>The opportunity</h3>
     <p>
       Prediko&apos;s ambition was to become the default inventory planning and replenishment platform
       for Shopify merchants. This project focused on rebuilding the product&apos;s most critical workflow
@@ -123,18 +137,21 @@ const Replenish_Numbers = () =>
         record of our core customers providing us with case study data that we could lean on in the future.
       </span>
     </div>
+    <p>
+      The core metrics we wanted to track and improve as part of this feature and related improvements were:
+    </p>
     <div className={csStyles.numbers}>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>...</span>
-        <p>...</p>
+        <span className={montserrat_alternates_bold.className}>10%</span>
+        <p>of users edited their plan before placing an order</p>
       </div>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>...</span>
-        <p>...</p>
+        <span className={montserrat_alternates_bold.className}>38%</span>
+        <p>of users completed more than one core action</p>
       </div>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>...</span>
-        <p>...</p>
+        <span className={montserrat_alternates_bold.className}>12%</span>
+        <p>of customers had updated their plan in the past 30 days</p>
       </div>
     </div>
   </>
@@ -153,12 +170,12 @@ const Replenish_Process = () =>
     <p>
       A consistent pattern emerged: while merchants intellectually understood the value of planning,
       they were stuck in their traditional methods of looking at the plan once a month or quarter.
-      We found from our own analysis that trends and recent sales had a larger affect on the
+      We found from our own analysis that trends and recent sales had a larger effect on the
       generated plan than customers were aware about, and therefore their own planning on our system
       was not adequate for accurate recommendations. The customers that planned manually, were
       unaware of recent changes in trends affecting the projections, and those that used Prediko&apos;s
       own planning model were unaware of the link between planning and ordering — manually changing their
-      reorder numbers based off their own thoughts - potentially leading to even larger discrepencies.
+      reorder numbers based off their own thoughts - potentially leading to even larger discrepancies.
     </p>
     <p>
       This reframed the challenge. The issue was not simply that users were skipping a step in the flow,
@@ -174,16 +191,6 @@ const Replenish_Process = () =>
     </p>
     <div>
       <p>
-        From this work, I set a strategic direction centred on three principles:
-      </p>
-      <ul className={csStyles.list}>
-        <li>Users should see long-term insight before being asked to take short-term action</li>
-        <li>The product should guide behaviour without removing a sense of control</li>
-        <li>Trust should be built through transparency and explanation, not just accuracy</li>
-      </ul>
-    </div>
-    <div>
-      <p>
         From this, I set three strategic principles for the redesign:
       </p>
       <ol className={csStyles.list}>
@@ -193,7 +200,23 @@ const Replenish_Process = () =>
       </ol>
     </div>
     <p>
-      (Placeholder: Insert 1–2 pivotal design decisions and the reasoning behind them.)
+      With these principles as a foundation, two early design decisions shaped how they translated into the product itself.
+    </p>
+    <p>
+      The first was to build a guided journey through the planning process, rather than presenting
+      merchants with an open-ended tool. Research made clear that users understood planning
+      intellectually, but lacked a mental model for how their inputs connected to Prediko&apos;s
+      recommendations. A more directed flow — one that surfaced the relationship between an
+      up-to-date plan and the quality of order suggestions — gave merchants the context they
+      needed to trust and act on the system.
+    </p>
+    <p>
+      The second was to focus attention on a limited number of products rather than the full
+      catalogue. Most merchants had too many SKUs to plan for consistently, and attempting to
+      do so led to paralysis or avoidance. The more realistic and effective behaviour was to
+      fix the outliers — products that were off-track — and confirm a handful of key items.
+      Designing around this reality, rather than an idealised end-state, made the experience
+      feel achievable and built the habit of regular engagement over time.
     </p>
   </>
 
@@ -223,31 +246,11 @@ const Replenish_Test = () =>
         <li>Planning became something users wanted to engage with, not something they had to complete</li>
       </ul>
     </div>
-
-    PLACEHOLDER ---
-    <p>
-      A critical insight emerged:<br />
-      Merchants did not need to be forced to plan — they needed to see the future clearly enough to want to plan.
-    </p>
-    <div>
-      <p>
-        This led to a strategic pivot:
-      </p>
-      <ul className={csStyles.list}>
-        <li>Introducing a long-range supply and reorder overview</li>
-        <li>Allowing flexible entry points into planning and ordering</li>
-        <li>Making the cost of not planning (stockouts, overstock, cash tied up) more visible</li>
-      </ul>
-    </div>
-    <p>
-      (Placeholder: Describe the moment of insight and how it changed the direction of the product.)
-    </p>
-    --!
-
   </>
 
 const Replenish_Build = () =>
   <>
+    <h3>Build</h3>
     <div className={csStyles.image}>
       <Image
         src="/case-studies/..."
@@ -269,8 +272,34 @@ const Replenish_Build = () =>
       strategy and that we had the analytics in place to measure whether the new journey was
       genuinely changing behaviour.
     </p>
-    <p>(Placeholder: Insert key constraints and trade-offs.)
-    </p>
+    <div>
+      <p>
+        The build came with three meaningful constraints, each of which shaped how the design was
+        delivered.
+      </p>
+      <ol className={csStyles.list}>
+        <li>
+          The frontend codebase was relatively rigid — existing component libraries and technology choices
+          limited how far the interface could deviate from established patterns. I worked closely with the
+          frontend team to scope changes carefully, and used the opportunity to introduce incremental
+          improvements that standardised the experience and improved cohesion without requiring a full
+          rebuild.
+        </li>
+        <li>
+          On the backend side, the recommendation engine itself was largely unchanged. Rather than
+          pushing to rebuild the underlying logic — which was already technically strong — I focused on
+          surfacing what the system already knew more clearly to the user. I did advocate for targeted
+          infrastructure changes to support better filtering and improved query speed, which helped the
+          experience feel more responsive without requiring deep architectural work.
+        </li>
+        <li>
+          Redesigning the core feature also created downstream implications for onboarding and marketing
+          assets. We prioritised in-product onboarding first, shipping updated flows in parallel with the
+          feature release, and updated website and external assets incrementally over time as the new
+          experience became established.
+        </li>
+      </ol>
+    </div>
   </>
 
 const Replenish_Numbers_2 = () =>
@@ -281,21 +310,29 @@ const Replenish_Numbers_2 = () =>
     </p>
     <div className={csStyles.numbers}>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>...</span>
-        <p>...</p>
+        <span className={montserrat_alternates_bold.className}>19%</span>
+        <p>of users now edit their plan before placing an order — <span className={montserrat_alternates_bold.className}>up from 10%</span></p>
       </div>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>...</span>
-        <p>...</p>
+        <span className={montserrat_alternates_bold.className}>68%</span>
+        <p>of users now complete more than one core planning action — <span className={montserrat_alternates_bold.className}>up from 38%</span></p>
       </div>
       <div className={csStyles.numberInfo}>
-        <span className={montserrat_alternates_bold.className}>...</span>
-        <p>...</p>
+        <span className={montserrat_alternates_bold.className}>27%</span>
+        <p>of customers updated their plan in the past 30 days — <span className={montserrat_alternates_bold.className}>up from 12%</span></p>
       </div>
     </div>
     <p>
       Qualitative feedback highlighted improved clarity, stronger trust in recommendations, and
       reduced reliance on external spreadsheets.
+    </p>
+    <p>
+      During the same period, Prediko grew from 
+      <span className={montserrat_alternates_bold.className}> 200 to over 500 customers </span> 
+      and from <span className={montserrat_alternates_bold.className}>$400k to $1.5m</span> ARR. 
+      Churn and conversion rates remained stable throughout — a meaningful signal that the
+      product improvements held up as the business scaled beyond the high-touch early-adopter phase,
+      where customers could no longer rely on founder support to fill gaps in the experience.
     </p>
   </>;
 
@@ -342,7 +379,7 @@ export function ReplenishPeek() {
 }
 
 export function Title() {
-  return <h1>Prediko Replenish Inventory (Core Feature)</h1>;
+  return <h1>Making inventory planning indispensable — Prediko&apos;s core replenishment redesign</h1>;
 }
 
 export default function Page() {
@@ -351,6 +388,7 @@ export default function Page() {
       <Replenish_Intro />
       <Replenish_Role />
       <Replenish_Overview />
+      <Replenish_Goal />
       <Replenish_Problem />
       <Replenish_Numbers />
       <Replenish_Process />
