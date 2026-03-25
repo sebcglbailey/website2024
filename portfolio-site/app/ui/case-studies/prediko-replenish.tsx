@@ -379,7 +379,7 @@ export function ReplenishPeek() {
 }
 
 export function Title() {
-  return <h1>Making inventory planning indispensable — Prediko&apos;s core replenishment redesign</h1>;
+  return <h1>Making inventory planning indispensable: Prediko&apos;s core replenishment redesign</h1>;
 }
 
 export default function Page() {

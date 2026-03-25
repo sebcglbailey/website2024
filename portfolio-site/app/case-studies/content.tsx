@@ -23,7 +23,7 @@ export default function Content() {
   const [content] = useState(() => [
     {
       href: "./case-studies/prediko-replenish",
-      title: "Prediko Replenish Inventory (Core Feature)",
+      title: "Prediko's core replenishment redesign",
       content: <ReplenishPeek />,
     },
     {
