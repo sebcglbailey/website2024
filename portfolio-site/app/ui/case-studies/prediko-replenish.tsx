@@ -28,19 +28,23 @@ const Replenish_Overview = () =>
   <>
     <div className={csStyles.image}>
       <Image
-        src="/case-studies/..."
-        alt="..."
+        src="/case-studies/prediko-replenish/hero.png"
+        alt="The redesigned Plan & Replenish experience in Prediko"
         width={1080}
         height={640}
       />
       <span>
-        ...
+        The redesigned Plan &amp; Replenish experience — a guided journey from demand forecast to confident purchasing decisions.
       </span>
     </div>
     <p>
       I led the end-to-end redesign of Prediko&apos;s core planning and replenishment experience,
       and in doing so, helped establish how the company approaches product design more broadly.
     </p>
+  </>;
+
+const Replenish_Overview_2 = () =>
+  <>
     <p>
       Prior to this project, product changes were largely reactive — driven by individual customer
       requests or founder intuition, with little structured process behind them. Part of my remit
@@ -74,18 +78,18 @@ const Replenish_Goal = () =>
 
 const Replenish_Problem = () =>
   <>
-    <h3>The problem</h3>
     <div className={csStyles.image}>
       <Image
-        src="/case-studies/..."
-        alt="..."
+        src="/case-studies/prediko-replenish/old.png"
+        alt="Prediko's original replenishment interface"
         width={1080}
         height={640}
-      />
+        />
       <span>
-        ...
+        Prediko&apos;s original replenishment interface — robust forecasting technology, but lacking the experience to drive the right planning behaviours.
       </span>
     </div>
+    <h3>The problem</h3>
     <p>
       When I joined, Prediko had early traction on the Shopify App Store and a growing base of merchants,
       but it was struggling to achieve strong product–market fit around its most important promise:
@@ -181,6 +185,17 @@ const Replenish_Process = () =>
       This reframed the challenge. The issue was not simply that users were skipping a step in the flow,
       but that the product did not yet provide the perspective required to make planning feel indispensable.
     </p>
+    <div className={csStyles.image}>
+      <Image
+        src="/case-studies/prediko-replenish/sprint.png"
+        alt="Design sprint session with the Prediko team"
+        width={1080}
+        height={640}
+      />
+      <span>
+        Running a condensed design sprint with founders, engineers, and customer-facing roles to align on the strategic direction.
+      </span>
+    </div>
 
     <h3>Design Strategy</h3>
     <p>
@@ -218,6 +233,17 @@ const Replenish_Process = () =>
       Designing around this reality, rather than an idealised end-state, made the experience
       feel achievable and built the habit of regular engagement over time.
     </p>
+    <div className={csStyles.image}>
+      <Image
+        src="/case-studies/prediko-replenish/sketches.png"
+        alt="Early sketches exploring the guided planning journey concept"
+        width={1080}
+        height={640}
+      />
+      <span>
+        Early sketches exploring the core principle of insight before action — surfacing future supply position before asking users to commit to orders.
+      </span>
+    </div>
   </>
 
 const Replenish_Test = () =>
@@ -246,22 +272,22 @@ const Replenish_Test = () =>
         <li>Planning became something users wanted to engage with, not something they had to complete</li>
       </ul>
     </div>
+    <div className={csStyles.image}>
+      <Image
+        src="/case-studies/prediko-replenish/concepts.png"
+        alt="Evolving design concepts during prototyping and validation"
+        width={1080}
+        height={640}
+      />
+      <span>
+        Evolving concepts during prototyping — the shift from controlling the sequence of actions to improving the quality of insight shown to users.
+      </span>
+    </div>
   </>
 
 const Replenish_Build = () =>
   <>
     <h3>Build</h3>
-    <div className={csStyles.image}>
-      <Image
-        src="/case-studies/..."
-        alt="..."
-        width={1080}
-        height={640}
-      />
-      <span>
-        Final designs for the Plan & Replenish journey
-      </span>
-    </div>
     <p>
       Working closely with the CTO and engineering team, we scoped an MVP that delivered the new
       mental model while respecting architectural and delivery constraints. The focus was on
@@ -300,6 +326,17 @@ const Replenish_Build = () =>
         </li>
       </ol>
     </div>
+    <div className={csStyles.image}>
+      <Image
+        src="/case-studies/prediko-replenish/supply-select.png"
+        alt="Final designs for the Plan & Replenish journey in Prediko"
+        width={1080}
+        height={640}
+      />
+      <span>
+        Final designs for the Plan &amp; Replenish journey.
+      </span>
+    </div>
   </>
 
 const Replenish_Numbers_2 = () =>
@@ -327,13 +364,25 @@ const Replenish_Numbers_2 = () =>
       reduced reliance on external spreadsheets.
     </p>
     <p>
-      During the same period, Prediko grew from 
-      <span className={montserrat_alternates_bold.className}> 200 to over 500 customers </span> 
-      and from <span className={montserrat_alternates_bold.className}>$400k to $1.5m</span> ARR. 
+      During the same period, Prediko grew from
+      <span className={montserrat_alternates_bold.className}> 200 to over 500 customers </span>
+      and from <span className={montserrat_alternates_bold.className}>$400k to $1.5m</span> ARR.
       Churn and conversion rates remained stable throughout — a meaningful signal that the
       product improvements held up as the business scaled beyond the high-touch early-adopter phase,
       where customers could no longer rely on founder support to fill gaps in the experience.
     </p>
+    <div className={csStyles.image}>
+      <iframe
+        className={csStyles.youtube}
+        src="https://embed.figma.com/proto/ohJljWHNbbWQCA0jDwg5B4/Plan--Buy---Transfer?node-id=1961-249295&viewport=253%2C72%2C0.06&scaling=scale-down&content-scaling=fixed&starting-point-node-id=1961%3A249295&page-id=1353%3A619548&embed-host=share"
+        title="Plan & Replenish — live prototype"
+        style={{ border: 0 }}
+        allowFullScreen
+      />
+      <span>
+        Explore the live prototype — the final Plan &amp; Replenish experience.
+      </span>
+    </div>
   </>;
 
 
@@ -388,6 +437,7 @@ export default function Page() {
       <Replenish_Intro />
       <Replenish_Role />
       <Replenish_Overview />
+      <Replenish_Overview_2 />
       <Replenish_Goal />
       <Replenish_Problem />
       <Replenish_Numbers />

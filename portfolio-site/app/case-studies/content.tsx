@@ -26,11 +26,11 @@ export default function Content() {
       title: "Prediko's core replenishment redesign",
       content: <ReplenishPeek />,
     },
-    {
-      href: "./case-studies/prediko-rebrand",
-      title: "Prediko Rebrand & Marketing Website",
-      content: <PredikoRebrandPeek />,
-    },
+    // {
+    //   href: "./case-studies/prediko-rebrand",
+    //   title: "Prediko Rebrand & Marketing Website",
+    //   content: <PredikoRebrandPeek />,
+    // },
     {
       href: "./case-studies/leadership",
       title: "Leadership",
