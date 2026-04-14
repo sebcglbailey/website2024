@@ -1,0 +1,50 @@
+.contentContainer {
+  width: 100%;
+}
+
+.appCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  border: 1px solid var(--color-orange);
+  padding: 0.2rem 0.5rem;
+  width: fit-content;
+}
+
+.description {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--color-light-black);
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-black);
+  padding-top: 1rem;
+}
+
+.features li {
+  font-size: 0.85rem;
+  color: var(--color-grey);
+  padding-left: 1rem;
+  position: relative;
+}
+
+.features li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--color-orange);
+}
