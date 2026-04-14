@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { Masonry } from "masonic";
 
-import MasonryCard from "../ui/cards/masonryCard";
+import MasonryCard from "../../ui/cards/masonryCard";
 
-import { experience } from "../lib/work";
+import { experience } from "../../lib/work";
 
-import cardStyles from "../ui/cards/cards.module.css";
+import cardStyles from "../../ui/cards/cards.module.css";
 import styles from "./work.module.css";
 
 export default function Page() {
