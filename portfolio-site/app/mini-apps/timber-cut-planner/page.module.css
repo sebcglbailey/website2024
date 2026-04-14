@@ -121,6 +121,11 @@
   & :global(.strip-card.tight) { border-color:rgba(90,171,143,0.35); }
   & :global(.strip-card.drag-over) { border-color:var(--accent2)!important;box-shadow:0 0 0 1px var(--accent2); }
   & :global(.strip-head) { display:flex;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--bg3);gap:6px; }
+  & :global(.strip-drag-handle) { width:16px;height:20px;display:flex;align-items:center;justify-content:center;cursor:grab;color:var(--ink3);font-size:11px;flex-shrink:0;border-radius:2px;transition:color 0.1s,background 0.1s;user-select:none; }
+  & :global(.strip-drag-handle:hover) { color:var(--ink2);background:rgba(255,255,255,0.06); }
+  & :global(.strip-drag-handle:active) { cursor:grabbing; }
+  & :global(.strip-card.strip-dragging) { opacity:0.45; }
+  & :global(.drop-indicator) { height:2px;background:var(--accent2);border-radius:2px;margin:2px 0;box-shadow:0 0 6px rgba(232,200,122,0.5); }
   & :global(.strip-num) { font-size:10px;font-weight:600;color:var(--ink2);letter-spacing:0.08em;white-space:nowrap; }
   & :global(.strip-badges) { display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex:1; }
   & :global(.sbadge) { font-size:9px;padding:2px 6px;border-radius:2px;font-weight:500;letter-spacing:0.03em;white-space:nowrap; }

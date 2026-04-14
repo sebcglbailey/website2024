@@ -248,6 +248,16 @@ export default function TimberCutPlanner() {
         const profileStrips = optimiseForProfile(sorted, s, DEFAULT_LEN())
         allStrips.push(...profileStrips)
       }
+
+      // Assign stable numbers once at creation — preserved across manual reorders
+      const localCountByProfile: Record<string, number> = {}
+      allStrips.forEach((strip, i) => {
+        strip.num = i + 1
+        const pid = strip.profileId || '__none__'
+        localCountByProfile[pid] = (localCountByProfile[pid] || 0) + 1
+        strip.localNum = localCountByProfile[pid]
+      })
+
       return allStrips
     }
 
@@ -433,33 +443,124 @@ export default function TimberCutPlanner() {
     }
 
     // ── DRAG & DROP ───────────────────────────────────────────────────────────────
-    let dragState: { stripIdx: number; cutIdx: number } | null = null
+    let dragState: { stripIdx: number; cutIdx: number; type: 'cut' | 'strip' } | null = null
 
     function onDragStart(e: DragEvent, stripIdx: number, cutIdx: number) {
-      dragState = { stripIdx, cutIdx }
+      dragState = { stripIdx, cutIdx, type: 'cut' }
       e.dataTransfer!.effectAllowed = 'move'
       e.dataTransfer!.setData('text/plain', `${stripIdx},${cutIdx}`)
       setTimeout(() => { if (e.target) (e.target as Element).classList.add('dragging') }, 0)
     }
-    function onDragEnd(e: DragEvent) {
+    function onStripDragStart(e: DragEvent, si: number) {
+      dragState = { stripIdx: si, cutIdx: -1, type: 'strip' }
+      e.dataTransfer!.effectAllowed = 'move'
+      e.dataTransfer!.setData('text/plain', `strip:${si}`)
+      const card = document.getElementById(`strip-${si}`)
+      if (card) {
+        // Clone must live inside the .timberPlanner wrapper so all scoped CSS rules apply
+        const timberRoot = document.getElementById('main')?.parentElement?.parentElement as HTMLElement | null
+        const clone = card.cloneNode(true) as HTMLElement
+        clone.style.position = 'absolute'
+        clone.style.top = '-9999px'
+        clone.style.left = '0'
+        clone.style.width = card.offsetWidth + 'px'
+        clone.style.opacity = '0.9'
+        clone.style.pointerEvents = 'none'
+        ;(timberRoot || document.body).appendChild(clone)
+        const rect = card.getBoundingClientRect()
+        e.dataTransfer!.setDragImage(clone, e.clientX - rect.left, e.clientY - rect.top)
+        setTimeout(() => { clone.remove(); card.classList.add('strip-dragging') }, 0)
+      }
+    }
+    function updateDropIndicator(toIdx: number, e: DragEvent) {
+      const toCard = document.getElementById(`strip-${toIdx}`)
+      if (!toCard) return
+      const rect = toCard.getBoundingClientRect()
+      const insertBefore = e.clientY < rect.top + rect.height / 2
+      const listEl = document.getElementById('strips-list')
+      if (!listEl) return
+      document.querySelectorAll('.drop-indicator').forEach(el => el.remove())
+      const indicator = document.createElement('div')
+      indicator.className = 'drop-indicator'
+      listEl.insertBefore(indicator, insertBefore ? toCard : toCard.nextSibling)
+    }
+    function clearDropIndicator() {
+      document.querySelectorAll('.drop-indicator').forEach(el => el.remove())
+    }
+    function onDragEnd(_e: DragEvent) {
       document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'))
       document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'))
+      document.querySelectorAll('.strip-dragging').forEach(el => el.classList.remove('strip-dragging'))
+      clearDropIndicator()
       dragState = null
     }
     function onDragOver(e: DragEvent, toIdx: number) {
       e.preventDefault(); e.dataTransfer!.dropEffect = 'move'
-      const card = document.getElementById(`strip-${toIdx}`)
-      if (card && dragState && dragState.stripIdx !== toIdx) card.classList.add('drag-over')
+      if (dragState?.type === 'strip') {
+        updateDropIndicator(toIdx, e)
+      } else {
+        const card = document.getElementById(`strip-${toIdx}`)
+        if (card && dragState && dragState.stripIdx !== toIdx) card.classList.add('drag-over')
+      }
     }
-    function onDragLeave(e: DragEvent, toIdx: number) {
-      const card = document.getElementById(`strip-${toIdx}`)
-      if (card) card.classList.remove('drag-over')
+    function onDragLeave(_e: DragEvent, toIdx: number) {
+      if (dragState?.type !== 'strip') {
+        const card = document.getElementById(`strip-${toIdx}`)
+        if (card) card.classList.remove('drag-over')
+      }
     }
     function onDrop(e: DragEvent, toIdx: number) {
       e.preventDefault()
       const card = document.getElementById(`strip-${toIdx}`)
       if (card) card.classList.remove('drag-over')
       if (!dragState) return
+
+      if (dragState.type === 'strip') {
+        const fromIdx = dragState.stripIdx
+        dragState = null
+        clearDropIndicator()
+        document.querySelectorAll('.strip-dragging').forEach(el => el.classList.remove('strip-dragging'))
+
+        const fromCard = document.getElementById(`strip-${fromIdx}`)
+        const toCard = document.getElementById(`strip-${toIdx}`)
+        const listEl = document.getElementById('strips-list')
+        if (!fromCard || !toCard || !listEl) { renderAll(); return }
+
+        const insertBefore = e.clientY < toCard.getBoundingClientRect().top + toCard.getBoundingClientRect().height / 2
+
+        // FLIP: snapshot positions of all strip cards before moving
+        const allCards = Array.from(listEl.querySelectorAll('.strip-card')) as HTMLElement[]
+        const oldRects = new Map<HTMLElement, DOMRect>()
+        allCards.forEach(c => oldRects.set(c, c.getBoundingClientRect()))
+
+        // Move in DOM
+        listEl.insertBefore(fromCard, insertBefore ? toCard : toCard.nextSibling)
+
+        // Animate each card from its old position to its new position
+        allCards.forEach(c => {
+          const old = oldRects.get(c)
+          if (!old) return
+          const dy = old.top - c.getBoundingClientRect().top
+          if (Math.abs(dy) > 0.5) {
+            c.animate(
+              [{ transform: `translateY(${dy}px)` }, { transform: 'translateY(0px)' }],
+              { duration: 220, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
+            )
+          }
+        })
+
+        // Reorder strips array to match new DOM order
+        const [strip] = strips.splice(fromIdx, 1)
+        const insertPos = insertBefore
+          ? (fromIdx < toIdx ? toIdx - 1 : toIdx)
+          : (fromIdx < toIdx ? toIdx : toIdx + 1)
+        strips.splice(Math.max(0, Math.min(insertPos, strips.length)), 0, strip)
+
+        modified = true
+        setTimeout(() => renderAll(), 230)
+        return
+      }
+
       const { stripIdx:fromIdx, cutIdx } = dragState
       if (fromIdx === toIdx) return
       const s = getS()
@@ -467,16 +568,17 @@ export default function TimberCutPlanner() {
       const piece = from.cuts[cutIdx]
 
       const toBuf = to.buf || s.bufOpt
-      const usedIfAdded = calcUsed([...to.cuts, piece], toBuf)
+      const usedWithOpt = calcUsed([...to.cuts, piece], toBuf)
+      const usedWithMin = calcUsed([...to.cuts, piece], s.bufMin)
+      // Prefer min buffer only if it avoids needing a longer strip
       let actualBuf = toBuf
-      if (usedIfAdded > to.purchasedLen) {
-        const usedMin = calcUsed([...to.cuts, piece], s.bufMin)
-        if (usedMin <= to.purchasedLen) {
-          actualBuf = s.bufMin
-        } else {
-          showNotification(`Won't fit — needs ${calcUsed([...to.cuts, piece], s.bufMin)}mm, strip is ${to.purchasedLen}mm`)
-          return
-        }
+      if (usedWithOpt > to.purchasedLen && usedWithMin <= to.purchasedLen) {
+        actualBuf = s.bufMin
+      }
+      // Block only if the combined cuts won't fit in any available strip length
+      if (calcUsed([...to.cuts, piece], actualBuf) > DEFAULT_LEN()) {
+        showNotification(`Won't fit — needs ${usedWithMin}mm but longest strip is ${DEFAULT_LEN()}mm`)
+        return
       }
 
       from.cuts.splice(cutIdx, 1)
@@ -627,7 +729,10 @@ export default function TimberCutPlanner() {
         const si = strips.indexOf(strip)
         const total = strip.purchasedLen
         const waste = strip.remaining
-        const cutsDisplay = strip.cuts.map((c: any,i: number) => ({...c,buf:strip.bufs[i],origIdx:i})).sort((a: any,b: any) => b.len-a.len)
+        const cutsDisplay = strip.cuts
+          .map((c: any, i: number) => ({...c, origIdx: i}))
+          .sort((a: any, b: any) => b.len - a.len)
+          .map((c: any, di: number, arr: any[]) => ({...c, buf: di < arr.length - 1 ? (strip.buf || 0) : 0}))
         const sc = stripCost(strip)
         const bufLabel = strip.minBufUsed ? `${strip.buf}mm ★` : `${strip.buf}mm`
         const stripProfile = profileById(strip.profileId)
@@ -685,15 +790,17 @@ export default function TimberCutPlanner() {
         }
 
         const profileStrips = strips.filter((st: any) => st.profileId===strip.profileId)
-        const localNum = profileStrips.indexOf(strip) + 1
-        const globalNum = si + 1
         const stripNumLabel = activeTab === 'all'
-          ? `STRIP ${globalNum}`
-          : `${stripProfileLabel} · ${localNum}/${profileStrips.length}`
+          ? `STRIP ${strip.num ?? si + 1}`
+          : `${stripProfileLabel} · ${strip.localNum ?? profileStrips.indexOf(strip) + 1}/${profileStrips.length}`
 
         html += `<div class="strip-card${strip.tight?' tight':''}" id="strip-${si}"
           ondragover="timberPlanner.onDragOver(event,${si})" ondragleave="timberPlanner.onDragLeave(event,${si})" ondrop="timberPlanner.onDrop(event,${si})">
           <div class="strip-head">
+            <div class="strip-drag-handle" draggable="true"
+              ondragstart="timberPlanner.onStripDragStart(event,${si})"
+              ondragend="timberPlanner.onDragEnd(event)"
+              title="Drag to reorder strip">⠿</div>
             <span class="strip-num">${stripNumLabel}</span>
             <div class="strip-badges">
               <select class="${lenSelectClass}" onchange="timberPlanner.changeStripLength(${si}, parseInt(this.value))"
@@ -859,7 +966,7 @@ export default function TimberCutPlanner() {
       safeRunCalc, confirmReset, closeConfirm,
       loadPreset, deletePreset,
       setTab, changeStripLength,
-      onDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
+      onDragStart, onStripDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
       showTip, hideTip, moveTip,
     }
 
