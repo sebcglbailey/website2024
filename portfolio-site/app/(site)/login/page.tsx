@@ -1,4 +1,4 @@
-import LoginForm from "../ui/cards/loginForm";
+import LoginForm from "../../ui/cards/loginForm";
 
 import styles from "./page.module.css";
 

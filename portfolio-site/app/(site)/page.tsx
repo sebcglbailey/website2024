@@ -4,22 +4,22 @@ import dynamic from "next/dynamic";
 
 import Link from "next/link";
 
-import Intro from "./ui/intro/intro";
-// import CaseStudies from "@/app/case-studies/page";
-// import Work from "@/app/work/page";
-import Education from "@/app/education/page";
-import SkillList from "./ui/sections/skills";
+import Intro from "../ui/intro/intro";
+// import CaseStudies from "@/app/(site)/case-studies/page";
+// import Work from "@/app/(site)/work/page";
+import Education from "@/app/(site)/education/page";
+import SkillList from "../ui/sections/skills";
 
-const DynamicWork = dynamic(() => import("@/app/work/page"), {
+const DynamicWork = dynamic(() => import("@/app/(site)/work/page"), {
   ssr: false,
 });
-const DynamicCaseStudies = dynamic(() => import("@/app/case-studies/page"), {
+const DynamicCaseStudies = dynamic(() => import("@/app/(site)/case-studies/page"), {
   ssr: false,
 });
 
-import { skills } from "./lib/skills";
+import { skills } from "../lib/skills";
 
-import { century_gothic_bold } from "./ui/fonts";
+import { century_gothic_bold } from "../ui/fonts";
 import styles from "./page.module.css";
 
 export default function Page() {

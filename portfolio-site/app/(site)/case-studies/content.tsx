@@ -4,17 +4,17 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 import { Masonry } from "masonic";
-import MasonryCard from "../ui/cards/masonryCard";
+import MasonryCard from "../../ui/cards/masonryCard";
 
 import styles from "./case-studies.module.css";
 
 import { SlatePeek } from "@/app/ui/case-studies/clearscore-design-system";
 import { EventsPeek } from "@/app/ui/case-studies/clearscore-events";
-import { LeadershipPeek } from "../ui/case-studies/leadership";
+import { LeadershipPeek } from "../../ui/case-studies/leadership";
 import { VisionPeek } from "@/app/ui/case-studies/clearscore-vision";
 import { AOCSPeek } from "@/app/ui/case-studies/clearscore-aocs";
-import { PredikoRebrandPeek } from "../ui/case-studies/prediko-rebrand";
-import { ReplenishPeek } from "../ui/case-studies/prediko-replenish";
+import { PredikoRebrandPeek } from "../../ui/case-studies/prediko-rebrand";
+import { ReplenishPeek } from "../../ui/case-studies/prediko-replenish";
 
 export default function Content() {
   const pathname = usePathname();

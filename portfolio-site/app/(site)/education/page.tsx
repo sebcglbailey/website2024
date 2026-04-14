@@ -1,8 +1,8 @@
-import ContentCard from "../ui/cards/contentCard";
+import ContentCard from "../../ui/cards/contentCard";
 
-import { education } from "../lib/education";
+import { education } from "../../lib/education";
 
-import cardStyles from '../ui/cards/cards.module.css';
+import cardStyles from '../../ui/cards/cards.module.css';
 import pageStyles from '../page.module.css';
 import styles from './education.module.css';
 

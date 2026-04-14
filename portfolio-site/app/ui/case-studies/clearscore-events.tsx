@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import csStyles from "@/app/case-studies/case-studies.module.css";
+import csStyles from "@/app/(site)/case-studies/case-studies.module.css";
 import {
   century_gothic_bold,
   montserrat_alternates_bold,
