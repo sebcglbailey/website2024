@@ -687,7 +687,7 @@ export default function TimberCutPlanner() {
         <div class="stat-card"><div class="stat-val">${(totalMM/1000).toFixed(2)}m</div><div class="stat-lbl">Total timber</div><div class="stat-sub">${totalMM}mm</div></div>
         <div class="stat-card"><div class="stat-val">${wasteP}%</div><div class="stat-lbl">Offcut waste</div><div class="stat-sub">${realWasteMM}mm total</div></div>
         <div class="stat-card"><div class="stat-val">${tightN}/${strips.length}</div><div class="stat-lbl">Tight strips</div><div class="stat-sub">${minBufN} use min buffer</div></div>
-        <div class="stat-card" style="border-color:rgba(212,130,42,0.3);">
+        <div class="stat-card" style="border-color:rgba(248,134,60,0.25);">
           <div class="stat-val" style="color:var(--accent2);">£${cost.toFixed(2)}</div>
           <div class="stat-lbl">Est. timber cost</div>
           <div class="stat-sub" style="line-height:1.5;">${costBreakdown || '—'}</div>
@@ -700,8 +700,8 @@ export default function TimberCutPlanner() {
           const col = PROFILE_COLOURS[ci%PROFILE_COLOURS.length]
           return `<div class="leg"><div class="leg-dot" style="background:${col};"></div>${p.w}×${p.d}mm</div>`
         }).join('')}
-        <div class="leg"><div class="leg-dot" style="background:repeating-linear-gradient(135deg,rgba(90,171,143,0.4) 0,rgba(90,171,143,0.4) 3px,rgba(90,171,143,0.15) 3px,rgba(90,171,143,0.15) 8px)"></div>Offcut ✓</div>
-        <div class="leg"><div class="leg-dot" style="background:repeating-linear-gradient(135deg,rgba(196,130,74,0.4) 0,rgba(196,130,74,0.4) 3px,rgba(196,130,74,0.15) 3px,rgba(196,130,74,0.15) 8px)"></div>Offcut loose</div>
+        <div class="leg"><div class="leg-dot" style="background:repeating-linear-gradient(135deg,rgba(77,184,140,0.4) 0,rgba(77,184,140,0.4) 3px,rgba(77,184,140,0.15) 3px,rgba(77,184,140,0.15) 8px)"></div>Offcut ✓</div>
+        <div class="leg"><div class="leg-dot" style="background:repeating-linear-gradient(135deg,rgba(224,96,48,0.4) 0,rgba(224,96,48,0.4) 3px,rgba(224,96,48,0.15) 3px,rgba(224,96,48,0.15) 8px)"></div>Offcut loose</div>
         <div class="leg"><div style="width:10px;height:10px;background:repeating-linear-gradient(45deg,rgba(255,255,255,0.15) 0,rgba(255,255,255,0.15) 2px,transparent 2px,transparent 5px);border-radius:2px;flex-shrink:0;"></div>Buffer</div>
       </div>
 
@@ -740,8 +740,8 @@ export default function TimberCutPlanner() {
         const usedByStrip = calcUsed(strip.cuts, strip.buf || s.bufOpt)
 
         const wasteStyle = strip.tight
-          ? 'background:repeating-linear-gradient(135deg,rgba(90,171,143,0.45) 0,rgba(90,171,143,0.45) 3px,rgba(90,171,143,0.15) 3px,rgba(90,171,143,0.15) 8px);'
-          : 'background:repeating-linear-gradient(135deg,rgba(196,130,74,0.35) 0,rgba(196,130,74,0.35) 3px,rgba(196,130,74,0.12) 3px,rgba(196,130,74,0.12) 8px);'
+          ? 'background:repeating-linear-gradient(135deg,rgba(77,184,140,0.45) 0,rgba(77,184,140,0.45) 3px,rgba(77,184,140,0.15) 3px,rgba(77,184,140,0.15) 8px);'
+          : 'background:repeating-linear-gradient(135deg,rgba(224,96,48,0.35) 0,rgba(224,96,48,0.35) 3px,rgba(224,96,48,0.12) 3px,rgba(224,96,48,0.12) 8px);'
 
         const lenOptions = AVAIL.map(l => {
           const fits = l >= usedByStrip
@@ -784,9 +784,9 @@ export default function TimberCutPlanner() {
           const wpct=(waste/total*100).toFixed(3)
           const showWL=waste/total>0.04
           segs+=`<div class="seg-waste" style="flex:1;min-width:${wpct}%;${wasteStyle}" data-tip="Offcut: ${waste}mm" onmouseenter="timberPlanner.showTip(event,this)" onmouseleave="timberPlanner.hideTip()">
-            ${showWL?`<span class="waste-lbl" style="color:${strip.tight?'#5aab8f':'#c4824a'};">${waste}mm</span>`:''}
+            ${showWL?`<span class="waste-lbl" style="color:${strip.tight?'#4db88c':'#e06030'};">${waste}mm</span>`:''}
           </div>`
-          chips+=`<span class="chip" style="background:${strip.tight?'rgba(90,171,143,0.12)':'rgba(196,130,74,0.1)'};color:${strip.tight?'#5aab8f':'#c4824a'};cursor:default;">${waste}mm offcut${strip.tight?' ✓':''}</span>`
+          chips+=`<span class="chip" style="background:${strip.tight?'rgba(77,184,140,0.12)':'rgba(224,96,48,0.1)'};color:${strip.tight?'#4db88c':'#e06030'};cursor:default;">${waste}mm offcut${strip.tight?' ✓':''}</span>`
         }
 
         const profileStrips = strips.filter((st: any) => st.profileId===strip.profileId)
@@ -840,8 +840,11 @@ export default function TimberCutPlanner() {
       el.addEventListener('mousemove', moveTip as EventListener)
     }
     function moveTip(e: MouseEvent) {
-      tooltip.style.left = (e.clientX+12)+'px'
-      tooltip.style.top  = (e.clientY-28)+'px'
+      const onLeft = e.clientX < window.innerWidth / 2
+      tooltip.style.left = onLeft
+        ? (e.clientX + 14) + 'px'
+        : (e.clientX - tooltip.offsetWidth - 14) + 'px'
+      tooltip.style.top = (e.clientY - 28) + 'px'
     }
     function hideTip() { tooltip.style.opacity = '0' }
 
@@ -905,10 +908,11 @@ export default function TimberCutPlanner() {
         const dateStr = new Date(p.savedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})
         const sn = p.name.replace(/"/g,'&quot;').replace(/'/g,'&#39;')
         const manualTag = p.hasManualChanges
-          ? `<span style="font-size:9px;color:var(--accent2);padding:1px 4px;background:rgba(232,200,122,0.1);border-radius:2px;">edited</span>`
+          ? `<span style="font-size:9px;color:var(--accent2);padding:1px 4px;background:rgba(248,134,60,0.1);border-radius:2px;">edited</span>`
           : ''
         return `<div class="preset-row">
-          <span class="preset-row-name" title="${sn}">${p.name}</span>
+          <span class="preset-row-name" data-tip="${sn}"
+            onmouseenter="timberPlanner.showTip(event,this)" onmouseleave="timberPlanner.hideTip()">${p.name}</span>
           <span class="preset-row-meta">${p.count} panels · ${dateStr}</span>
           ${manualTag}
           <button class="preset-loadbtn" onclick="timberPlanner.loadPreset('${sn}')">Load</button>
