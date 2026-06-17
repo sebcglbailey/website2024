@@ -4,9 +4,10 @@ import { useEffect } from 'react'
 export default function TimberCutPlanner() {
   useEffect(() => {
     // ── CONSTANTS ─────────────────────────────────────────────────────────────────
-    const PRESET_KEY   = 'timberPlanner_presets_v1'
-    const PROFILES_KEY = 'timberPlanner_profiles_v1'
-    const LENGTHS_KEY  = 'timberPlanner_lengths_v1'
+    const PRESET_KEY        = 'timberPlanner_presets_v1'
+    const FRAMES_PRESET_KEY = 'timberPlanner_framePresets_v1'
+    const PROFILES_KEY      = 'timberPlanner_profiles_v1'
+    const LENGTHS_KEY       = 'timberPlanner_lengths_v1'
 
     const PROFILE_COLOURS = ['#4a7fb5','#3d8f74','#b57840','#7060b0','#b54a6a','#5a9fb5','#9f8040','#6a9f40']
 
@@ -14,14 +15,20 @@ export default function TimberCutPlanner() {
     let AVAIL = [900, 1200, 1500, 1800, 2100]
     function DEFAULT_LEN() { return AVAIL[AVAIL.length - 1] }
 
+    let mode: 'panels' | 'frames' = 'panels'
+
     let profiles: { id: string; w: number; d: number; price: number }[] = [
       { id:'p1', w:19, d:35,  price:1.20 },
       { id:'p2', w:19, d:50,  price:1.60 },
       { id:'p3', w:25, d:50,  price:2.00 },
     ]
 
-    let panels: { w: number; h: number; qty: number; frameProfileId: string; braceProfileId: string }[] = [
-      { w:1220, h:808, qty:1, frameProfileId:'p1', braceProfileId:'p1' },
+    let panels: { w: number; h: number; qty: number; frameThick: number; frameDepth: number; braceWidth: number; braceDepth: number }[] = [
+      { w:1220, h:808, qty:1, frameThick:19, frameDepth:35, braceWidth:19, braceDepth:35 },
+    ]
+
+    let frames: { w: number; h: number; d: number; gap: number; qty: number; faceThick: number; supportDepth: number; supportWidth: number; buffer: number }[] = [
+      { w:500, h:400, d:40, gap:5, qty:1, faceThick:19, supportDepth:35, supportWidth:19, buffer:3 },
     ]
 
     let strips: any[] = []
@@ -39,12 +46,73 @@ export default function TimberCutPlanner() {
     function nextProfileId() {
       return 'p' + Date.now()
     }
+    function profileByDims(a: number, b: number) {
+      return profiles.find(p => (p.w === a && p.d === b) || (p.w === b && p.d === a)) || null
+    }
+    function uniqueDims() {
+      const dims = new Set<number>()
+      for (const p of profiles) { dims.add(p.w); dims.add(p.d) }
+      return [...dims].sort((a, b) => a - b)
+    }
+    function depthsFor(dim: number) {
+      const depths = new Set<number>()
+      for (const p of profiles) {
+        if (p.w === dim) depths.add(p.d)
+        if (p.d === dim) depths.add(p.w)
+      }
+      return [...depths].sort((a, b) => a - b)
+    }
+    function nearestFaceProfile(faceThick: number, minDepth: number) {
+      const candidates = profiles
+        .filter(p => p.w === faceThick || p.d === faceThick)
+        .map(p => ({ p, depth: p.w === faceThick ? p.d : p.w }))
+      const fitting = candidates.filter(c => c.depth >= minDepth).sort((a, b) => a.depth - b.depth)
+      if (fitting.length) return fitting[0].p
+      return candidates.sort((a, b) => b.depth - a.depth)[0]?.p || null
+    }
     function sanitisePanelProfiles() {
-      const ids = profiles.map(p => p.id)
-      const fallback = ids[0] || null
+      const dims = uniqueDims()
+      const fallbackThick = profiles[0]?.w || 19
+      const fallbackDepth = profiles[0]?.d || 35
       for (const panel of panels) {
-        if (!ids.includes(panel.frameProfileId)) panel.frameProfileId = fallback!
-        if (!ids.includes(panel.braceProfileId)) panel.braceProfileId = fallback!
+        if ('frameProfileId' in panel) {
+          const fp = profileById((panel as any).frameProfileId)
+          ;(panel as any).frameThick = fp ? fp.w : fallbackThick
+          ;(panel as any).frameDepth = fp ? fp.d : fallbackDepth
+          delete (panel as any).frameProfileId
+        }
+        if ('braceProfileId' in panel) {
+          const bp = profileById((panel as any).braceProfileId)
+          ;(panel as any).braceWidth = bp ? bp.w : fallbackThick
+          ;(panel as any).braceDepth = bp ? bp.d : fallbackDepth
+          delete (panel as any).braceProfileId
+        }
+        if (!dims.includes(panel.frameDepth)) panel.frameDepth = fallbackDepth
+        if (!depthsFor(panel.frameDepth).includes(panel.frameThick)) panel.frameThick = depthsFor(panel.frameDepth)[0] || fallbackThick
+        if (!dims.includes(panel.braceDepth)) panel.braceDepth = fallbackDepth
+        if (!depthsFor(panel.braceDepth).includes(panel.braceWidth)) panel.braceWidth = depthsFor(panel.braceDepth)[0] || fallbackThick
+      }
+    }
+    function sanitiseFrameProfiles() {
+      const dims = uniqueDims()
+      const fallbackThick = profiles[0]?.w || 19
+      const fallbackDepth = profiles[0]?.d || 35
+      for (const frame of frames) {
+        if ('faceThickness' in frame) {
+          ;(frame as any).faceThick = (frame as any).faceThickness || fallbackThick
+          delete (frame as any).faceThickness
+        }
+        if ('supportProfileId' in frame) {
+          const sp = profileById((frame as any).supportProfileId)
+          ;(frame as any).supportDepth = sp ? sp.d : fallbackDepth
+          ;(frame as any).supportWidth = sp ? sp.w : fallbackThick
+          delete (frame as any).supportProfileId
+        }
+        if (!frame.faceThick || !dims.includes(frame.faceThick)) frame.faceThick = fallbackThick
+        if (!frame.supportDepth || !dims.includes(frame.supportDepth)) frame.supportDepth = fallbackDepth
+        if (!frame.supportWidth || !depthsFor(frame.supportDepth).includes(frame.supportWidth)) {
+          frame.supportWidth = depthsFor(frame.supportDepth)[0] || fallbackThick
+        }
       }
     }
     function saveProfilesToStorage() {
@@ -92,20 +160,53 @@ export default function TimberCutPlanner() {
     }
 
     function getPanelPieces(panel: typeof panels[0], s: ReturnType<typeof getS>) {
-      const { w, h, qty, frameProfileId, braceProfileId } = panel
-      const fp = profileById(frameProfileId)
-      const bp = profileById(braceProfileId)
-      const { pieces: bracePcs, nShort, nLong, sLen, lLen, deduct } = getBraces(w, h, s, fp)
+      const { w, h, qty, frameThick, frameDepth, braceWidth, braceDepth } = panel
+      const fp = profileByDims(frameThick, frameDepth)
+      const bp = profileByDims(braceWidth, braceDepth)
+      const fpId = fp?.id || '__frame__'
+      const bpId = bp?.id || '__brace__'
+      const { pieces: bracePcs, nShort, nLong, sLen, lLen, deduct } = getBraces(w, h, s, { w: frameThick })
       const perPanel = [
-        { len:w, type:'w', pricePerM: fp ? fp.price : 0, profileId: frameProfileId },
-        { len:w, type:'w', pricePerM: fp ? fp.price : 0, profileId: frameProfileId },
-        { len:h, type:'h', pricePerM: fp ? fp.price : 0, profileId: frameProfileId },
-        { len:h, type:'h', pricePerM: fp ? fp.price : 0, profileId: frameProfileId },
-        ...bracePcs.map(pc => ({ ...pc, pricePerM: bp ? bp.price : 0, profileId: braceProfileId })),
+        { len:w, type:'w', pricePerM: fp?.price || 0, profileId: fpId },
+        { len:w, type:'w', pricePerM: fp?.price || 0, profileId: fpId },
+        { len:h, type:'h', pricePerM: fp?.price || 0, profileId: fpId },
+        { len:h, type:'h', pricePerM: fp?.price || 0, profileId: fpId },
+        ...bracePcs.map(pc => ({ ...pc, pricePerM: bp?.price || 0, profileId: bpId })),
       ]
       const all: any[] = []
       for (let i=0; i<qty; i++) all.push(...perPanel.map(p=>({...p})))
       return { perPanel, all, nShort, nLong, sLen, lLen, deduct, fp, bp }
+    }
+
+    // ── FRAME PIECE LOGIC ─────────────────────────────────────────────────────────
+    function getFramePieces(frame: typeof frames[0]) {
+      const faceThick    = frame.faceThick || 19
+      const supportDepth = frame.supportDepth || 35
+      const supportWidth = frame.supportWidth || 19
+      const buf          = frame.buffer || 3
+      const sp           = profileByDims(supportDepth, supportWidth)
+      const faceDepth    = frame.d + supportDepth + buf
+      const faceProf     = nearestFaceProfile(faceThick, faceDepth)
+      const widthFaceLen     = frame.w + frame.gap * 2 + faceThick * 2
+      const heightFaceLen    = frame.h + frame.gap * 2 + faceThick * 2
+      const widthSupportLen  = frame.w + frame.gap * 2
+      const heightSupportLen = frame.h + frame.gap * 2
+      const faceId    = faceProf?.id || '__face__'
+      const facePrice = faceProf?.price || 0
+      const spId      = sp?.id || '__support__'
+      const perFrame = [
+        { len: widthFaceLen,     type: 'fw', pricePerM: facePrice, profileId: faceId },
+        { len: widthFaceLen,     type: 'fw', pricePerM: facePrice, profileId: faceId },
+        { len: heightFaceLen,    type: 'fh', pricePerM: facePrice, profileId: faceId },
+        { len: heightFaceLen,    type: 'fh', pricePerM: facePrice, profileId: faceId },
+        { len: widthSupportLen,  type: 'sw', pricePerM: sp?.price || 0, profileId: spId },
+        { len: widthSupportLen,  type: 'sw', pricePerM: sp?.price || 0, profileId: spId },
+        { len: heightSupportLen, type: 'sh', pricePerM: sp?.price || 0, profileId: spId },
+        { len: heightSupportLen, type: 'sh', pricePerM: sp?.price || 0, profileId: spId },
+      ]
+      const all: any[] = []
+      for (let i = 0; i < frame.qty; i++) all.push(...perFrame.map(p => ({...p})))
+      return { perFrame, all, faceProf, sp, faceDepth, faceThick, faceId, widthFaceLen, heightFaceLen, widthSupportLen, heightSupportLen }
     }
 
     // ── OPTIMISER ────────────────────────────────────────────────────────────────
@@ -249,7 +350,6 @@ export default function TimberCutPlanner() {
         allStrips.push(...profileStrips)
       }
 
-      // Assign stable numbers once at creation — preserved across manual reorders
       const localCountByProfile: Record<string, number> = {}
       allStrips.forEach((strip, i) => {
         strip.num = i + 1
@@ -272,11 +372,11 @@ export default function TimberCutPlanner() {
     }
 
     // ── SEG COLOUR ────────────────────────────────────────────────────────────────
-    const TYPE_LBL: Record<string, string> = { w:'W', h:'H', bs:'B↔', bl:'B↕' }
+    const TYPE_LBL: Record<string, string> = { w:'W', h:'H', bs:'B↔', bl:'B↕', fw:'F↔', fh:'F↕', sw:'S↔', sh:'S↕' }
 
     function segColour(cut: any) {
       const col = profileColour(cut.profileId)
-      if (cut.type === 'bs' || cut.type === 'bl') return col + 'cc'
+      if (cut.type === 'bs' || cut.type === 'bl' || cut.type === 'sw' || cut.type === 'sh') return col + 'cc'
       return col
     }
 
@@ -285,7 +385,12 @@ export default function TimberCutPlanner() {
       const el = document.getElementById('lengths-list')
       if (!el) return
       el.innerHTML = AVAIL.map((l, i) => `
-        <div class="profile-row" style="padding:4px 7px;">
+        <div class="profile-row" style="padding:4px 7px;" data-drag-idx="${i}"
+          ondragover="timberPlanner.onSidebarDragOver(event,'length',${i},'lengths-list')"
+          ondrop="timberPlanner.onSidebarDrop(event,'length',${i},'lengths-list')">
+          <div class="sidebar-drag-handle" draggable="true"
+            ondragstart="timberPlanner.onSidebarDragStart(event,'length',${i})"
+            ondragend="timberPlanner.onSidebarDragEnd(event)">⠿</div>
           <span style="flex:1;font-size:11px;color:var(--ink);font-family:var(--mono);">${l}mm</span>
           <span style="font-size:10px;color:var(--ink3);margin-right:6px;">${(l/1000).toFixed(2)}m</span>
           ${AVAIL.length > 1
@@ -318,7 +423,12 @@ export default function TimberCutPlanner() {
       if (!el) return
       el.innerHTML = profiles.map((p, i) => {
         const col = PROFILE_COLOURS[i % PROFILE_COLOURS.length]
-        return `<div class="profile-row">
+        return `<div class="profile-row" data-drag-idx="${i}"
+          ondragover="timberPlanner.onSidebarDragOver(event,'profile',${i},'profiles-list')"
+          ondrop="timberPlanner.onSidebarDrop(event,'profile',${i},'profiles-list')">
+          <div class="sidebar-drag-handle" draggable="true"
+            ondragstart="timberPlanner.onSidebarDragStart(event,'profile',${i})"
+            ondragend="timberPlanner.onSidebarDragEnd(event)">⠿</div>
           <div class="profile-swatch" style="background:${col};"></div>
           <div class="profile-edit-inputs">
             <input class="pinput pinput-w" type="number" value="${p.w}" min="1" max="200"
@@ -335,6 +445,7 @@ export default function TimberCutPlanner() {
         </div>`
       }).join('')
       renderPanelsList()
+      renderFramesList()
     }
 
     function updateProfile(id: string, field: string, val: string) {
@@ -344,6 +455,7 @@ export default function TimberCutPlanner() {
       else (p as any)[field] = parseInt(val) || 1
       saveProfilesToStorage()
       renderPanelsList()
+      renderFramesList()
     }
 
     function addProfile() {
@@ -363,25 +475,19 @@ export default function TimberCutPlanner() {
       if (profiles.length <= 1) { showNotification("Can't delete the last profile"); return }
       profiles = profiles.filter(p => p.id !== id)
       sanitisePanelProfiles()
+      sanitiseFrameProfiles()
       saveProfilesToStorage()
       renderProfilesList()
     }
 
     // ── RENDER: PANELS LIST ───────────────────────────────────────────────────────
-    function buildProfileOptions(selectedId: string) {
-      return profiles.map(p => {
-        return `<option value="${p.id}" ${p.id===selectedId?'selected':''}>${p.w}×${p.d}mm · £${p.price.toFixed(2)}/m</option>`
-      }).join('')
-    }
-
     function renderPanelsList() {
       const s = getS()
       const el = document.getElementById('panels-list')
       if (!el) return
+      const allDims = uniqueDims()
       el.innerHTML = panels.map((p, i) => {
-        const fp = profileById(p.frameProfileId)
-        const bp = profileById(p.braceProfileId)
-        const { nShort, nLong, sLen, lLen, deduct } = getBraces(p.w, p.h, s, fp)
+        const { nShort, nLong, sLen, lLen, deduct } = getBraces(p.w, p.h, s, { w: p.frameThick })
         let braceNote = ''
         if (nShort > 0 || nLong > 0) {
           const parts = []
@@ -389,10 +495,19 @@ export default function TimberCutPlanner() {
           if (nLong > 0)  parts.push(`${nLong}× <span class="bpill bpill-l">${lLen}mm</span>`)
           braceNote = `<div class="pi-braces">${parts.join(' + ')} <span style="color:var(--ink3);font-size:9px;">(deduct ${deduct}mm)</span></div>`
         }
+        const fp = profileByDims(p.frameThick, p.frameDepth)
+        const bp = profileByDims(p.braceWidth, p.braceDepth)
         const frameCol = fp ? profileColour(fp.id) : '#888'
         const braceCol = bp ? profileColour(bp.id) : '#888'
-        return `<div class="panel-item">
+        const frameWidths = depthsFor(p.frameDepth)
+        const braceWidths = depthsFor(p.braceDepth)
+        return `<div class="panel-item" data-drag-idx="${i}"
+          ondragover="timberPlanner.onSidebarDragOver(event,'panel',${i},'panels-list')"
+          ondrop="timberPlanner.onSidebarDrop(event,'panel',${i},'panels-list')">
           <div class="pi-row">
+            <div class="sidebar-drag-handle" draggable="true"
+              ondragstart="timberPlanner.onSidebarDragStart(event,'panel',${i})"
+              ondragend="timberPlanner.onSidebarDragEnd(event)">⠿</div>
             <span class="pi-dim">${p.w}×${p.h}</span>
             <div class="pi-qty">
               <button class="qbtn" onclick="timberPlanner.changeQty(${i},-1)">−</button>
@@ -405,28 +520,43 @@ export default function TimberCutPlanner() {
             <div class="pi-select-wrap">
               <span style="width:7px;height:7px;border-radius:50%;background:${frameCol};flex-shrink:0;display:inline-block;"></span>
               <span class="pi-select-label">Frame</span>
-              <select class="pi-select" onchange="timberPlanner.setPanelProfile(${i},'frame',this.value)">
-                ${buildProfileOptions(p.frameProfileId)}
+              <select class="pi-select" onchange="timberPlanner.setPanelFrameDepth(${i},parseInt(this.value))">
+                ${allDims.map(d => `<option value="${d}" ${d===p.frameDepth?'selected':''}>${d}mm deep</option>`).join('')}
+              </select>
+              <select class="pi-select" onchange="timberPlanner.setPanelFrameThick(${i},parseInt(this.value))">
+                ${frameWidths.map(d => `<option value="${d}" ${d===p.frameThick?'selected':''}>${d}mm wide</option>`).join('')}
               </select>
             </div>
-            <div class="pi-select-wrap">
+            ${(nShort > 0 || nLong > 0) ? `<div class="pi-select-wrap">
               <span style="width:7px;height:7px;border-radius:50%;background:${braceCol};flex-shrink:0;display:inline-block;"></span>
               <span class="pi-select-label">Brace</span>
-              <select class="pi-select" onchange="timberPlanner.setPanelProfile(${i},'brace',this.value)">
-                ${buildProfileOptions(p.braceProfileId)}
+              <select class="pi-select" onchange="timberPlanner.setPanelBraceDepth(${i},parseInt(this.value))">
+                ${allDims.map(d => `<option value="${d}" ${d===p.braceDepth?'selected':''}>${d}mm deep</option>`).join('')}
               </select>
-            </div>
+              <select class="pi-select" onchange="timberPlanner.setPanelBraceWidth(${i},parseInt(this.value))">
+                ${braceWidths.map(d => `<option value="${d}" ${d===p.braceWidth?'selected':''}>${d}mm wide</option>`).join('')}
+              </select>
+            </div>` : ''}
           </div>
           ${braceNote}
         </div>`
       }).join('')
     }
 
-    function setPanelProfile(i: number, which: string, id: string) {
-      if (which === 'frame') panels[i].frameProfileId = id
-      else panels[i].braceProfileId = id
+    function setPanelFrameDepth(i: number, val: number) {
+      panels[i].frameDepth = val
+      const widths = depthsFor(val)
+      if (!widths.includes(panels[i].frameThick)) panels[i].frameThick = widths[0] || val
       renderPanelsList()
     }
+    function setPanelFrameThick(i: number, val: number) { panels[i].frameThick = val; renderPanelsList() }
+    function setPanelBraceDepth(i: number, val: number) {
+      panels[i].braceDepth = val
+      const widths = depthsFor(val)
+      if (!widths.includes(panels[i].braceWidth)) panels[i].braceWidth = widths[0] || val
+      renderPanelsList()
+    }
+    function setPanelBraceWidth(i: number, val: number) { panels[i].braceWidth = val; renderPanelsList() }
     function changeQty(i: number, d: number) { panels[i].qty = Math.max(1, panels[i].qty + d); renderPanelsList() }
     function deletePanel(i: number)   { panels.splice(i, 1); renderPanelsList() }
     function addPanel() {
@@ -434,16 +564,133 @@ export default function TimberCutPlanner() {
       const h = parseInt((document.getElementById('add-h') as HTMLInputElement).value)
       const q = parseInt((document.getElementById('add-q') as HTMLInputElement).value) || 1
       if (!w || !h) return
-      const defaultId = profiles[0]?.id || null
-      panels.push({ w, h, qty:q, frameProfileId:defaultId!, braceProfileId:defaultId! });
+      const dp = profiles[0]
+      panels.push({ w, h, qty:q, frameThick: dp?.w||19, frameDepth: dp?.d||35, braceWidth: dp?.w||19, braceDepth: dp?.d||35 });
       (document.getElementById('add-w') as HTMLInputElement).value = '';
       (document.getElementById('add-h') as HTMLInputElement).value = '';
       (document.getElementById('add-q') as HTMLInputElement).value = '1'
       renderPanelsList()
     }
 
+    // ── RENDER: FRAMES LIST ───────────────────────────────────────────────────────
+    function renderFramesList() {
+      const el = document.getElementById('frames-list')
+      if (!el) return
+      const allDims = uniqueDims()
+      el.innerHTML = frames.map((f, i) => {
+        const { sp, faceProf, faceDepth, faceThick, widthFaceLen, heightFaceLen, widthSupportLen, heightSupportLen } = getFramePieces(f)
+        const suppCol = sp ? profileColour(sp.id) : '#888'
+        const faceCol = faceProf ? profileColour(faceProf.id) : '#888'
+        const faceActualDepth = faceProf ? (faceProf.w === faceThick ? faceProf.d : faceProf.w) : faceDepth
+        const supportWidths = depthsFor(f.supportDepth || 35)
+        return `<div class="panel-item" data-drag-idx="${i}"
+          ondragover="timberPlanner.onSidebarDragOver(event,'frame',${i},'frames-list')"
+          ondrop="timberPlanner.onSidebarDrop(event,'frame',${i},'frames-list')">
+          <div class="pi-row">
+            <div class="sidebar-drag-handle" draggable="true"
+              ondragstart="timberPlanner.onSidebarDragStart(event,'frame',${i})"
+              ondragend="timberPlanner.onSidebarDragEnd(event)">⠿</div>
+            <span class="pi-dim">${f.w}×${f.h}</span>
+            <span style="font-size:10px;color:var(--ink3);flex:1;margin-left:5px;">d${f.d} · gap${f.gap}</span>
+            <div class="pi-qty">
+              <button class="qbtn" onclick="timberPlanner.changeFrameQty(${i},-1)">−</button>
+              <span class="qval">×${f.qty}</span>
+              <button class="qbtn" onclick="timberPlanner.changeFrameQty(${i},+1)">+</button>
+            </div>
+            <button class="delbtn" onclick="timberPlanner.deleteFrame(${i})">×</button>
+          </div>
+          <div class="pi-profiles" style="margin-top:6px;">
+            <div class="pi-select-wrap">
+              <span style="width:7px;height:7px;border-radius:50%;background:${faceCol};flex-shrink:0;display:inline-block;"></span>
+              <span class="pi-select-label">Face</span>
+              <select class="pi-select" onchange="timberPlanner.setFrameFaceThick(${i},parseInt(this.value))">
+                ${allDims.map(d => `<option value="${d}" ${d===faceThick?'selected':''}>${d}mm wide</option>`).join('')}
+              </select>
+              <span style="font-size:9px;color:var(--ink2);margin-left:4px;">→ ${faceThick}×${faceActualDepth}mm${faceActualDepth > faceDepth ? ` <span style="color:var(--ink3);">(min ${faceDepth}mm)</span>` : ''}</span>
+            </div>
+          </div>
+          <div class="pi-profiles" style="margin-top:5px;">
+            <div class="pi-select-wrap">
+              <span style="width:7px;height:7px;border-radius:50%;background:${suppCol};flex-shrink:0;display:inline-block;"></span>
+              <span class="pi-select-label">Support</span>
+              <select class="pi-select" onchange="timberPlanner.setFrameSupportDepth(${i},parseInt(this.value))">
+                ${allDims.map(d => `<option value="${d}" ${d===(f.supportDepth||35)?'selected':''}>${d}mm deep</option>`).join('')}
+              </select>
+              <select class="pi-select" onchange="timberPlanner.setFrameSupportWidth(${i},parseInt(this.value))">
+                ${supportWidths.map(d => `<option value="${d}" ${d===(f.supportWidth||19)?'selected':''}>${d}mm wide</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="pi-braces" style="margin-top:5px;">
+            <span style="color:var(--ink2);">Face:</span>
+            2× <span class="bpill bpill-s">${widthFaceLen}mm↔</span> · 2× <span class="bpill bpill-l">${heightFaceLen}mm↕</span>
+            &nbsp;&nbsp;
+            <span style="color:var(--ink2);">Support:</span>
+            2× <span class="bpill bpill-s">${widthSupportLen}mm↔</span> · 2× <span class="bpill bpill-l">${heightSupportLen}mm↕</span>
+          </div>
+          <div class="pi-braces">
+            <span style="color:var(--ink3);font-size:9px;">Frame depth: ${faceDepth}mm (artwork ${f.d}mm + support ${f.supportDepth||35}mm deep + ${f.buffer||3}mm)</span>
+          </div>
+        </div>`
+      }).join('')
+    }
+
+    function setFrameFaceThick(i: number, val: number) { frames[i].faceThick = val; renderFramesList() }
+    function setFrameSupportDepth(i: number, val: number) {
+      frames[i].supportDepth = val
+      const widths = depthsFor(val)
+      if (!widths.includes(frames[i].supportWidth)) frames[i].supportWidth = widths[0] || val
+      renderFramesList()
+    }
+    function setFrameSupportWidth(i: number, val: number) { frames[i].supportWidth = val; renderFramesList() }
+    function changeFrameQty(i: number, d: number) { frames[i].qty = Math.max(1, frames[i].qty + d); renderFramesList() }
+    function deleteFrame(i: number) { frames.splice(i, 1); renderFramesList() }
+    function addFrame() {
+      const w   = parseInt((document.getElementById('add-fw') as HTMLInputElement).value)
+      const h   = parseInt((document.getElementById('add-fh') as HTMLInputElement).value)
+      const d   = parseInt((document.getElementById('add-fd') as HTMLInputElement).value) || 40
+      const gap = parseInt((document.getElementById('add-fg') as HTMLInputElement).value) || 5
+      const q   = parseInt((document.getElementById('add-fq') as HTMLInputElement).value) || 1
+      if (!w || !h) { showNotification('Enter W and H for the artwork'); return }
+      const dp = profiles[0]
+      const smallestDim = uniqueDims()[0] || dp?.w || 19
+      const defaultSupportWidth = depthsFor(smallestDim)[0] || dp?.w || 19
+      frames.push({ w, h, d, gap, qty: q, faceThick: smallestDim, supportDepth: smallestDim, supportWidth: defaultSupportWidth, buffer: 3 });
+      (document.getElementById('add-fw') as HTMLInputElement).value = '';
+      (document.getElementById('add-fh') as HTMLInputElement).value = '';
+      (document.getElementById('add-fd') as HTMLInputElement).value = '';
+      (document.getElementById('add-fg') as HTMLInputElement).value = '';
+      (document.getElementById('add-fq') as HTMLInputElement).value = '1'
+      renderFramesList()
+    }
+
+    // ── MODE SWITCH ───────────────────────────────────────────────────────────────
+    function setMode(newMode: 'panels' | 'frames') {
+      mode = newMode
+      document.getElementById('mode-tab-panels')?.classList.toggle('active', mode === 'panels')
+      document.getElementById('mode-tab-frames')?.classList.toggle('active', mode === 'frames')
+      const panelsSection = document.getElementById('panels-section')
+      const framesSection = document.getElementById('frames-section')
+      if (panelsSection) panelsSection.style.display = mode === 'panels' ? '' : 'none'
+      if (framesSection) framesSection.style.display = mode === 'frames' ? '' : 'none'
+      const presetName = document.getElementById('preset-name') as HTMLInputElement
+      if (presetName) presetName.placeholder = mode === 'panels' ? 'Name this panel set…' : 'Name this frame set…'
+      const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement
+      if (resetBtn) resetBtn.textContent = mode === 'panels' ? 'Reset panels' : 'Reset frames'
+      const braceRow = document.getElementById('brace-thresh-row')
+      const brace2Row = document.getElementById('brace2-thresh-row')
+      if (braceRow) braceRow.style.display = mode === 'panels' ? '' : 'none'
+      if (brace2Row) brace2Row.style.display = mode === 'panels' ? '' : 'none'
+      strips = []
+      modified = false
+      activeTab = 'all'
+      renderPresetList()
+      renderAll()
+    }
+
     // ── DRAG & DROP ───────────────────────────────────────────────────────────────
     let dragState: { stripIdx: number; cutIdx: number; type: 'cut' | 'strip' } | null = null
+    let sidebarDrag: { type: string; fromIdx: number } | null = null
 
     function onDragStart(e: DragEvent, stripIdx: number, cutIdx: number) {
       dragState = { stripIdx, cutIdx, type: 'cut' }
@@ -457,7 +704,6 @@ export default function TimberCutPlanner() {
       e.dataTransfer!.setData('text/plain', `strip:${si}`)
       const card = document.getElementById(`strip-${si}`)
       if (card) {
-        // Clone must live inside the .timberPlanner wrapper so all scoped CSS rules apply
         const timberRoot = document.getElementById('main')?.parentElement?.parentElement as HTMLElement | null
         const clone = card.cloneNode(true) as HTMLElement
         clone.style.position = 'absolute'
@@ -495,6 +741,7 @@ export default function TimberCutPlanner() {
       dragState = null
     }
     function onDragOver(e: DragEvent, toIdx: number) {
+      if (sidebarDrag) return
       e.preventDefault(); e.dataTransfer!.dropEffect = 'move'
       if (dragState?.type === 'strip') {
         updateDropIndicator(toIdx, e)
@@ -528,15 +775,12 @@ export default function TimberCutPlanner() {
 
         const insertBefore = e.clientY < toCard.getBoundingClientRect().top + toCard.getBoundingClientRect().height / 2
 
-        // FLIP: snapshot positions of all strip cards before moving
         const allCards = Array.from(listEl.querySelectorAll('.strip-card')) as HTMLElement[]
         const oldRects = new Map<HTMLElement, DOMRect>()
         allCards.forEach(c => oldRects.set(c, c.getBoundingClientRect()))
 
-        // Move in DOM
         listEl.insertBefore(fromCard, insertBefore ? toCard : toCard.nextSibling)
 
-        // Animate each card from its old position to its new position
         allCards.forEach(c => {
           const old = oldRects.get(c)
           if (!old) return
@@ -549,7 +793,6 @@ export default function TimberCutPlanner() {
           }
         })
 
-        // Reorder strips array to match new DOM order
         const [strip] = strips.splice(fromIdx, 1)
         const insertPos = insertBefore
           ? (fromIdx < toIdx ? toIdx - 1 : toIdx)
@@ -570,12 +813,10 @@ export default function TimberCutPlanner() {
       const toBuf = to.buf || s.bufOpt
       const usedWithOpt = calcUsed([...to.cuts, piece], toBuf)
       const usedWithMin = calcUsed([...to.cuts, piece], s.bufMin)
-      // Prefer min buffer only if it avoids needing a longer strip
       let actualBuf = toBuf
       if (usedWithOpt > to.purchasedLen && usedWithMin <= to.purchasedLen) {
         actualBuf = s.bufMin
       }
-      // Block only if the combined cuts won't fit in any available strip length
       if (calcUsed([...to.cuts, piece], actualBuf) > DEFAULT_LEN()) {
         showNotification(`Won't fit — needs ${usedWithMin}mm but longest strip is ${DEFAULT_LEN()}mm`)
         return
@@ -619,6 +860,126 @@ export default function TimberCutPlanner() {
       strip.minBufUsed = buf < s.bufOpt
     }
 
+    // ── SIDEBAR DRAG & DROP ───────────────────────────────────────────────────────
+    function onSidebarDragStart(e: DragEvent, type: string, fromIdx: number) {
+      sidebarDrag = { type, fromIdx }
+      e.dataTransfer!.effectAllowed = 'move'
+      const item = (e.target as HTMLElement).closest('[data-drag-idx]') as HTMLElement | null
+      if (item) {
+        const timberRoot = document.getElementById('main')?.parentElement?.parentElement as HTMLElement | null
+        const clone = item.cloneNode(true) as HTMLElement
+        clone.style.position = 'absolute'
+        clone.style.top = '-9999px'
+        clone.style.left = '0'
+        clone.style.width = item.offsetWidth + 'px'
+        clone.style.opacity = '0.85'
+        clone.style.pointerEvents = 'none'
+        ;(timberRoot || document.body).appendChild(clone)
+        const rect = item.getBoundingClientRect()
+        e.dataTransfer!.setDragImage(clone, e.clientX - rect.left, e.clientY - rect.top)
+        setTimeout(() => { clone.remove(); item.classList.add('sidebar-dragging') }, 0)
+      }
+    }
+
+    function onSidebarDragEnd(_e: DragEvent) {
+      document.querySelectorAll('.sidebar-dragging').forEach(el => el.classList.remove('sidebar-dragging'))
+      clearSidebarDropIndicator()
+      sidebarDrag = null
+    }
+
+    function clearSidebarDropIndicator() {
+      document.querySelectorAll('.sidebar-drop-before').forEach(el => el.classList.remove('sidebar-drop-before'))
+      document.querySelectorAll('.sidebar-drop-after').forEach(el => el.classList.remove('sidebar-drop-after'))
+    }
+
+    function onSidebarDragOver(e: DragEvent, type: string, toIdx: number, listId: string) {
+      if (dragState) return
+      if (!sidebarDrag || sidebarDrag.type !== type) return
+      e.preventDefault()
+      e.dataTransfer!.dropEffect = 'move'
+      const listEl = document.getElementById(listId)
+      if (!listEl) return
+      const targetEl = listEl.querySelector(`[data-drag-idx="${toIdx}"]`)
+      if (!targetEl) return
+      const rect = targetEl.getBoundingClientRect()
+      const insertBefore = e.clientY < rect.top + rect.height / 2
+      clearSidebarDropIndicator()
+      targetEl.classList.add(insertBefore ? 'sidebar-drop-before' : 'sidebar-drop-after')
+    }
+
+    function onSidebarDrop(e: DragEvent, type: string, toIdx: number, listId: string) {
+      e.preventDefault()
+      clearSidebarDropIndicator()
+      if (!sidebarDrag || sidebarDrag.type !== type) { sidebarDrag = null; return }
+      const fromIdx = sidebarDrag.fromIdx
+      sidebarDrag = null
+      if (fromIdx === toIdx) return
+
+      const listEl = document.getElementById(listId)
+      const targetEl = listEl?.querySelector(`[data-drag-idx="${toIdx}"]`)
+      let insertBefore = true
+      if (targetEl) {
+        const rect = targetEl.getBoundingClientRect()
+        insertBefore = e.clientY < rect.top + rect.height / 2
+      }
+
+      // Snapshot Y positions for FLIP animation
+      const snapItems = listEl ? Array.from(listEl.querySelectorAll('[data-drag-idx]')) as HTMLElement[] : []
+      const oldTops = snapItems.map(el => el.getBoundingClientRect().top)
+      const n = oldTops.length
+
+      // Compute final insertion index (into the post-removal array)
+      const adjustedTo = fromIdx < toIdx ? toIdx - 1 : toIdx
+      const insertAt = Math.max(0, Math.min(insertBefore ? adjustedTo : adjustedTo + 1, n - 1))
+
+      const reorder = (arr: any[]): any[] => {
+        const result = [...arr]
+        const [item] = result.splice(fromIdx, 1)
+        result.splice(insertAt, 0, item)
+        return result
+      }
+
+      if (type === 'preset') {
+        if (mode === 'frames') saveFramePresetsToStorage(reorder(loadFramePresets()))
+        else savePresetsToStorage(reorder(loadPresets()))
+        renderPresetList()
+      } else if (type === 'profile') {
+        profiles = reorder(profiles)
+        saveProfilesToStorage()
+        renderProfilesList()
+      } else if (type === 'length') {
+        AVAIL = reorder(AVAIL)
+        saveLengthsToStorage()
+        renderLengthsList()
+      } else if (type === 'panel') {
+        panels = reorder(panels)
+        renderPanelsList()
+      } else if (type === 'frame') {
+        frames = reorder(frames)
+        renderFramesList()
+      }
+
+      // FLIP animation: perm[newIdx] = oldIdx
+      if (listEl && n > 1) {
+        const perm = Array.from({ length: n }, (_, i) => i)
+        const [movedPerm] = perm.splice(fromIdx, 1)
+        perm.splice(insertAt, 0, movedPerm)
+        requestAnimationFrame(() => {
+          const newItems = Array.from(listEl.querySelectorAll('[data-drag-idx]')) as HTMLElement[]
+          newItems.forEach((el, i) => {
+            if (perm[i] === undefined) return
+            const dy = oldTops[perm[i]] - el.getBoundingClientRect().top
+            if (Math.abs(dy) > 0.5) {
+              el.animate(
+                [{ transform: `translateY(${dy}px)` }, { transform: 'translateY(0)' }],
+                { duration: 200, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' }
+              )
+            }
+          })
+        })
+      }
+    }
+
     // ── RENDER: MAIN ─────────────────────────────────────────────────────────────
     function setTab(id: string) {
       activeTab = id
@@ -630,7 +991,9 @@ export default function TimberCutPlanner() {
       const main = document.getElementById('main')
       if (!main) return
       if (!strips.length) {
-        main.innerHTML = '<div class="empty">Configure panels on the left<br>then press <em>Recalculate cut list</em></div>'
+        main.innerHTML = mode === 'panels'
+          ? '<div class="empty">Configure panels on the left<br>then press <em>Recalculate cut list</em></div>'
+          : '<div class="empty">Configure frames on the left<br>then press <em>Recalculate cut list</em></div>'
         return
       }
 
@@ -656,7 +1019,9 @@ export default function TimberCutPlanner() {
 
       const profileSummary = profiles.map(p => `${p.w}×${p.d}mm`).join(', ')
       const topbarSub = document.getElementById('topbar-sub')
-      if (topbarSub) topbarSub.textContent = `Profiles: ${profileSummary} · mitre joints · drag cuts between strips`
+      if (topbarSub) topbarSub.textContent = mode === 'panels'
+        ? `Profiles: ${profileSummary} · mitre joints · drag cuts between strips`
+        : `Profiles: ${profileSummary} · floating frames · drag cuts between strips`
 
       const usedProfileIds = [...new Set(strips.map((st: any) => st.profileId).filter(Boolean))] as string[]
       usedProfileIds.sort((a,b) => profiles.findIndex(p=>p.id===a) - profiles.findIndex(p=>p.id===b))
@@ -664,6 +1029,10 @@ export default function TimberCutPlanner() {
       if (activeTab !== 'all' && !usedProfileIds.includes(activeTab)) activeTab = 'all'
 
       const visibleStrips = activeTab === 'all' ? strips : strips.filter((st: any) => st.profileId===activeTab)
+
+      const algoNote = mode === 'panels'
+        ? `Strips are profile-specific. Buffer model: N cuts = N−1 inter-cut buffers, no trailing buffer. Buffer uniform per strip — optimal ${s.bufOpt}mm or min ${s.bufMin}mm (★). Offcut target ≤${s.maxOffcut}mm. Brace deduct = 2 × frame W.`
+        : `Face cuts: artwork + gap×2 + profile×2 per side (mitre corners). Support cuts: artwork + gap×2 per side (inner, butt joint). Buffer: optimal ${s.bufOpt}mm or min ${s.bufMin}mm (★). Offcut target ≤${s.maxOffcut}mm.`
 
       let html = `
       <div class="stats-row">
@@ -705,7 +1074,7 @@ export default function TimberCutPlanner() {
         <div class="leg"><div style="width:10px;height:10px;background:repeating-linear-gradient(45deg,rgba(255,255,255,0.15) 0,rgba(255,255,255,0.15) 2px,transparent 2px,transparent 5px);border-radius:2px;flex-shrink:0;"></div>Buffer</div>
       </div>
 
-      <div class="algo-note">Strips are profile-specific. Buffer model: N cuts = N−1 inter-cut buffers, no trailing buffer. Buffer uniform per strip — optimal ${s.bufOpt}mm or min ${s.bufMin}mm (★). Offcut target ≤${s.maxOffcut}mm. Brace deduct = 2 × frame W.</div>
+      <div class="algo-note">${algoNote}</div>
 
       <div class="tabs-bar">
         <button class="tab-btn${activeTab==='all'?' active':''}" onclick="timberPlanner.setTab('all')">
@@ -759,7 +1128,7 @@ export default function TimberCutPlanner() {
           const showLbl = cut.len/total > 0.06
           const isMinBuf = strip.minBufUsed
           const col = segColour(cut)
-          const isBrace = cut.type==='bs'||cut.type==='bl'
+          const isBrace = cut.type==='bs'||cut.type==='bl'||cut.type==='sw'||cut.type==='sh'
           const profile = profileById(cut.profileId)
           const bufAfter = cut.buf > 0 ? ` + ${cut.buf}mm buf` : ' (last cut)'
           const tipText = `${TYPE_LBL[cut.type]}: ${cut.len}mm · ${profile?profile.w+'×'+profile.d+'mm':'?'}${bufAfter} · £${((cut.len/1000)*(cut.pricePerM||0)).toFixed(3)}`
@@ -853,67 +1222,122 @@ export default function TimberCutPlanner() {
       try { return JSON.parse(localStorage.getItem(PRESET_KEY) || 'null') || [] } catch(e) { return [] }
     }
     function savePresetsToStorage(p: any[]) { localStorage.setItem(PRESET_KEY, JSON.stringify(p)) }
+    function loadFramePresets() {
+      try { return JSON.parse(localStorage.getItem(FRAMES_PRESET_KEY) || 'null') || [] } catch(e) { return [] }
+    }
+    function saveFramePresetsToStorage(p: any[]) { localStorage.setItem(FRAMES_PRESET_KEY, JSON.stringify(p)) }
 
     function savePreset() {
       const nameEl = document.getElementById('preset-name') as HTMLInputElement
       const name = nameEl.value.trim()
       if (!name) { nameEl.focus(); showNotification('Enter a name for this preset first'); return }
-      if (!panels.length) { showNotification('No panels to save'); return }
-      const presets = loadPresets()
-      const existing = presets.findIndex((p: any) => p.name===name)
-      const entry = {
-        name,
-        panels: JSON.parse(JSON.stringify(panels)),
-        strips: JSON.parse(JSON.stringify(strips)),
-        savedAt: Date.now(),
-        count: panels.reduce((s,p) => s+p.qty, 0),
-        hasManualChanges: modified,
+
+      if (mode === 'frames') {
+        if (!frames.length) { showNotification('No frames to save'); return }
+        const presets = loadFramePresets()
+        const existing = presets.findIndex((p: any) => p.name === name)
+        const entry = {
+          name,
+          frames: JSON.parse(JSON.stringify(frames)),
+          strips: JSON.parse(JSON.stringify(strips)),
+          savedAt: Date.now(),
+          count: frames.reduce((s: number, f: any) => s + f.qty, 0),
+          hasManualChanges: modified,
+        }
+        if (existing >= 0) { presets[existing] = entry; showNotification(`Preset "${name}" updated`) }
+        else { presets.unshift(entry); showNotification(`Preset "${name}" saved`) }
+        saveFramePresetsToStorage(presets)
+      } else {
+        if (!panels.length) { showNotification('No panels to save'); return }
+        const presets = loadPresets()
+        const existing = presets.findIndex((p: any) => p.name === name)
+        const entry = {
+          name,
+          panels: JSON.parse(JSON.stringify(panels)),
+          strips: JSON.parse(JSON.stringify(strips)),
+          savedAt: Date.now(),
+          count: panels.reduce((s: number, p: any) => s + p.qty, 0),
+          hasManualChanges: modified,
+        }
+        if (existing >= 0) { presets[existing] = entry; showNotification(`Preset "${name}" updated`) }
+        else { presets.unshift(entry); showNotification(`Preset "${name}" saved`) }
+        savePresetsToStorage(presets)
       }
-      if (existing>=0) { presets[existing]=entry; showNotification(`Preset "${name}" updated`) }
-      else { presets.unshift(entry); showNotification(`Preset "${name}" saved`) }
-      savePresetsToStorage(presets)
       nameEl.value = ''
       renderPresetList()
     }
+
     function loadPreset(name: string) {
-      const entry = loadPresets().find((p: any) => p.name===name)
-      if (!entry) return
-      panels = JSON.parse(JSON.stringify(entry.panels))
-      sanitisePanelProfiles()
-      renderPanelsList()
-      if (entry.strips && entry.strips.length) {
-        strips = JSON.parse(JSON.stringify(entry.strips))
-        modified = entry.hasManualChanges || false
-        activeTab = 'all'
-        renderAll()
-        showNotification(`Loaded preset "${name}"${entry.hasManualChanges ? ' (includes manual overrides)' : ''}`)
+      if (mode === 'frames') {
+        const entry = loadFramePresets().find((p: any) => p.name === name)
+        if (!entry) return
+        frames = JSON.parse(JSON.stringify(entry.frames))
+        sanitiseFrameProfiles()
+        renderFramesList()
+        if (entry.strips && entry.strips.length) {
+          strips = JSON.parse(JSON.stringify(entry.strips))
+          modified = entry.hasManualChanges || false
+          activeTab = 'all'
+          renderAll()
+          showNotification(`Loaded preset "${name}"${entry.hasManualChanges ? ' (includes manual overrides)' : ''}`)
+        } else {
+          runCalc()
+          showNotification(`Loaded preset "${name}"`)
+        }
       } else {
-        runCalc()
-        showNotification(`Loaded preset "${name}"`)
+        const entry = loadPresets().find((p: any) => p.name === name)
+        if (!entry) return
+        panels = JSON.parse(JSON.stringify(entry.panels))
+        sanitisePanelProfiles()
+        renderPanelsList()
+        if (entry.strips && entry.strips.length) {
+          strips = JSON.parse(JSON.stringify(entry.strips))
+          modified = entry.hasManualChanges || false
+          activeTab = 'all'
+          renderAll()
+          showNotification(`Loaded preset "${name}"${entry.hasManualChanges ? ' (includes manual overrides)' : ''}`)
+        } else {
+          runCalc()
+          showNotification(`Loaded preset "${name}"`)
+        }
       }
     }
+
     function deletePreset(name: string) {
       confirm2(`Delete preset <strong>"${name}"</strong>? This can't be undone.`, () => {
-        savePresetsToStorage(loadPresets().filter((p: any) => p.name!==name))
+        if (mode === 'frames') {
+          saveFramePresetsToStorage(loadFramePresets().filter((p: any) => p.name !== name))
+        } else {
+          savePresetsToStorage(loadPresets().filter((p: any) => p.name !== name))
+        }
         renderPresetList()
         showNotification(`Preset "${name}" deleted`)
       })
     }
+
     function renderPresetList() {
-      const presets = loadPresets()
+      const presets = mode === 'frames' ? loadFramePresets() : loadPresets()
       const el = document.getElementById('preset-list')
       if (!el) return
       if (!presets.length) { el.innerHTML='<div class="preset-empty">No saved presets yet</div>'; return }
-      el.innerHTML = presets.map((p: any) => {
+      el.innerHTML = presets.map((p: any, idx: number) => {
         const dateStr = new Date(p.savedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})
         const sn = p.name.replace(/"/g,'&quot;').replace(/'/g,'&#39;')
         const manualTag = p.hasManualChanges
           ? `<span style="font-size:9px;color:var(--accent2);padding:1px 4px;background:rgba(248,134,60,0.1);border-radius:2px;">edited</span>`
           : ''
-        return `<div class="preset-row">
+        const countLabel = mode === 'frames'
+          ? `${p.count} frame${p.count !== 1 ? 's' : ''}`
+          : `${p.count} panel${p.count !== 1 ? 's' : ''}`
+        return `<div class="preset-row" data-drag-idx="${idx}"
+          ondragover="timberPlanner.onSidebarDragOver(event,'preset',${idx},'preset-list')"
+          ondrop="timberPlanner.onSidebarDrop(event,'preset',${idx},'preset-list')">
+          <div class="sidebar-drag-handle" draggable="true"
+            ondragstart="timberPlanner.onSidebarDragStart(event,'preset',${idx})"
+            ondragend="timberPlanner.onSidebarDragEnd(event)">⠿</div>
           <span class="preset-row-name" data-tip="${sn}"
             onmouseenter="timberPlanner.showTip(event,this)" onmouseleave="timberPlanner.hideTip()">${p.name}</span>
-          <span class="preset-row-meta">${p.count} panels · ${dateStr}</span>
+          <span class="preset-row-meta">${countLabel} · ${dateStr}</span>
           ${manualTag}
           <button class="preset-loadbtn" onclick="timberPlanner.loadPreset('${sn}')">Load</button>
           <button class="preset-delbtn" onclick="timberPlanner.deletePreset('${sn}')" title="Delete">×</button>
@@ -923,11 +1347,19 @@ export default function TimberCutPlanner() {
 
     // ── RESET ─────────────────────────────────────────────────────────────────────
     function confirmReset() {
-      confirm2('Clear all panels and start from scratch?', () => {
-        panels=[]; strips=[]; modified=false
-        renderPanelsList(); renderAll()
-        showNotification('Panels cleared')
-      })
+      if (mode === 'frames') {
+        confirm2('Clear all frames and start from scratch?', () => {
+          frames = []; strips = []; modified = false
+          renderFramesList(); renderAll()
+          showNotification('Frames cleared')
+        })
+      } else {
+        confirm2('Clear all panels and start from scratch?', () => {
+          panels = []; strips = []; modified = false
+          renderPanelsList(); renderAll()
+          showNotification('Panels cleared')
+        })
+      }
     }
 
     // ── CONFIRM ───────────────────────────────────────────────────────────────────
@@ -947,7 +1379,11 @@ export default function TimberCutPlanner() {
     function runCalc() {
       const s = getS()
       const allPieces: any[] = []
-      for (const p of panels) allPieces.push(...getPanelPieces(p,s).all)
+      if (mode === 'frames') {
+        for (const f of frames) allPieces.push(...getFramePieces(f).all)
+      } else {
+        for (const p of panels) allPieces.push(...getPanelPieces(p, s).all)
+      }
       strips = optimise(allPieces, s)
       modified = false
       activeTab = 'all'
@@ -966,11 +1402,16 @@ export default function TimberCutPlanner() {
     ;(window as any).timberPlanner = {
       savePreset, addProfile, deleteProfile, updateProfile,
       addLength, removeLength,
-      changeQty, deletePanel, addPanel, setPanelProfile,
+      changeQty, deletePanel, addPanel,
+      setPanelFrameThick, setPanelFrameDepth, setPanelBraceWidth, setPanelBraceDepth,
+      changeFrameQty, deleteFrame, addFrame,
+      setFrameFaceThick, setFrameSupportDepth, setFrameSupportWidth,
       safeRunCalc, confirmReset, closeConfirm,
       loadPreset, deletePreset,
       setTab, changeStripLength,
+      setMode,
       onDragStart, onStripDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
+      onSidebarDragStart, onSidebarDragEnd, onSidebarDragOver, onSidebarDrop,
       showTip, hideTip, moveTip,
     }
 
@@ -1003,6 +1444,12 @@ export default function TimberCutPlanner() {
         <div className="sidebar">
           <div className="sidebar-scroll">
 
+            {/* MODE TABS */}
+            <div className="mode-tabs">
+              <button className="mode-tab active" id="mode-tab-panels" onClick={() => (window as any).timberPlanner?.setMode?.('panels')}>Panels</button>
+              <button className="mode-tab" id="mode-tab-frames" onClick={() => (window as any).timberPlanner?.setMode?.('frames')}>Frames</button>
+            </div>
+
             {/* PRESETS */}
             <span className="section-label">Presets</span>
             <div className="presets-block">
@@ -1016,7 +1463,7 @@ export default function TimberCutPlanner() {
             {/* TIMBER PROFILES */}
             <span className="section-label section-gap">Timber profiles</span>
             <div className="settings-block">
-              <div style={{fontSize:'9px',color:'var(--ink3)',marginBottom:'8px',lineHeight:'1.6'}}>Define your available sizes. Each panel picks a <em>frame</em> and <em>brace</em> profile. Frame width drives brace deduct (2×W).</div>
+              <div style={{fontSize:'9px',color:'var(--ink3)',marginBottom:'8px',lineHeight:'1.6'}}>Define your available sizes. Each piece picks a profile. W drives mitre deduct (2×W) for panels.</div>
               <div style={{display:'grid',gridTemplateColumns:'8px 59px 59px 60px 16px',gap:'4px',marginBottom:'5px',padding:'0 7px'}}>
                 <span style={{paddingLeft: '6px', gridColumnStart:2, fontSize:'9px',color:'var(--ink3)'}}>W</span>
                 <span style={{paddingLeft: '6px', fontSize:'9px',color:'var(--ink3)'}}>D</span>
@@ -1066,11 +1513,11 @@ export default function TimberCutPlanner() {
                   <input className="sinput" id="s-bufMin" type="number" defaultValue={15} min={0} max={50} title="Min buffer" />
                 </div>
               </div>
-              <div className="srow">
+              <div className="srow" id="brace-thresh-row">
                 <span className="slabel">Single brace &gt; (mm)</span>
                 <input className="sinput" id="s-braceThresh" type="number" defaultValue={501} min={0} max={2000} />
               </div>
-              <div className="srow">
+              <div className="srow" id="brace2-thresh-row">
                 <span className="slabel">Double brace &gt; (mm)</span>
                 <input className="sinput" id="s-brace2Thresh" type="number" defaultValue={1200} min={0} max={3000} />
               </div>
@@ -1081,24 +1528,47 @@ export default function TimberCutPlanner() {
             </div>
 
             {/* PANELS */}
-            <span className="section-label section-gap">Panels</span>
-            <div id="panels-list"></div>
-            <div className="add-form">
-              <span className="section-label" style={{marginBottom:'4px'}}>Add panel</span>
-              <div className="add-row">
-                <input className="ainput" id="add-w" type="number" placeholder="W mm" />
-                <span className="alabel">×</span>
-                <input className="ainput" id="add-h" type="number" placeholder="H mm" />
-                <span className="alabel">qty</span>
-                <input className="ainput" id="add-q" type="number" defaultValue={1} min={1} style={{width:'38px'}} />
-                <button className="addbtn" onClick={() => (window as any).timberPlanner?.addPanel()}>+ Add</button>
+            <div id="panels-section">
+              <span className="section-label section-gap">Panels</span>
+              <div id="panels-list"></div>
+              <div className="add-form">
+                <span className="section-label" style={{marginBottom:'4px'}}>Add panel</span>
+                <div className="add-row">
+                  <input className="ainput" id="add-w" type="number" placeholder="W mm" />
+                  <span className="alabel">×</span>
+                  <input className="ainput" id="add-h" type="number" placeholder="H mm" />
+                  <span className="alabel">qty</span>
+                  <input className="ainput" id="add-q" type="number" defaultValue={1} min={1} style={{width:'38px'}} />
+                  <button className="addbtn" onClick={() => (window as any).timberPlanner?.addPanel()}>+ Add</button>
+                </div>
+              </div>
+            </div>
+
+            {/* FRAMES */}
+            <div id="frames-section" style={{display:'none'}}>
+              <span className="section-label section-gap">Frames</span>
+              <div id="frames-list"></div>
+              <div className="add-form">
+                <span className="section-label" style={{marginBottom:'4px'}}>Add frame</span>
+                <div className="add-row">
+                  <input className="ainput" id="add-fw" type="number" placeholder="W mm" />
+                  <span className="alabel">×</span>
+                  <input className="ainput" id="add-fh" type="number" placeholder="H mm" />
+                  <span className="alabel" style={{fontSize:'10px',color:'var(--ink3)'}}>d</span>
+                  <input className="ainput" id="add-fd" type="number" placeholder="D mm" style={{width:'50px'}} />
+                  <span className="alabel" style={{fontSize:'10px',color:'var(--ink3)'}}>gap</span>
+                  <input className="ainput" id="add-fg" type="number" placeholder="5" style={{width:'42px'}} />
+                  <span className="alabel">qty</span>
+                  <input className="ainput" id="add-fq" type="number" defaultValue={1} min={1} style={{width:'38px'}} />
+                  <button className="addbtn" onClick={() => (window as any).timberPlanner?.addFrame()}>+ Add</button>
+                </div>
               </div>
             </div>
 
           </div>
           <div className="sidebar-foot">
             <button className="calcbtn" onClick={() => (window as any).timberPlanner?.safeRunCalc()}>Recalculate cut list</button>
-            <button className="resetbtn" onClick={() => (window as any).timberPlanner?.confirmReset()}>Reset panels</button>
+            <button className="resetbtn" id="reset-btn" onClick={() => (window as any).timberPlanner?.confirmReset()}>Reset panels</button>
           </div>
         </div>
 
