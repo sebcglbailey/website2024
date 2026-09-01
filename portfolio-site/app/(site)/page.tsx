@@ -41,7 +41,9 @@ export default function Page() {
         </p>
         <p>
           I&apos;ve helped build ClearScore from 1 million users to over 22
-          million, and the design team from 3 designers up to 50.
+          million, and the design team from 3 designers to over 40. More
+          recently, I&apos;ve helped grow Prediko&apos;s revenue by more than
+          5x in under two years.
         </p>
         <p>
           My focus on{" "}
@@ -83,8 +85,7 @@ export default function Page() {
           .
         </p>
         <p>
-          Recently, I have had the opportunity to lead on ClearScore&apos;s new
-          Platform initiatives through a{" "}
+          At ClearScore, I led on their Platform initiatives through a{" "}
           <Link
             className={century_gothic_bold.className}
             href="/case-studies/clearscore-design-system"
@@ -92,8 +93,8 @@ export default function Page() {
             refreshed Design System across multiple brands and platforms
           </Link>
           , a Server-Driven UI framework, and a headless CMS integration. With
-          these new technologies, and other major architectural changes, we have
-          been able to{" "}
+          these new technologies, and other major architectural changes, we were
+          able to{" "}
           <Link
             className={century_gothic_bold.className}
             href="/case-studies/clearscore-vision"
@@ -102,9 +103,25 @@ export default function Page() {
             months
           </Link>
           , which otherwise would have taken years, and millions more in
-          expenditure to build. I have also helped to onboard dozens of
-          designers and other staff in the usage of these tools, including being
-          able to contribute to them themselves.
+          expenditure to build. I also helped to onboard dozens of designers and
+          other staff in the usage of these tools, including being able to
+          contribute to them themselves.
+        </p>
+        <p>
+          Most recently, I have been leading on and{" "}
+          <Link
+            className={century_gothic_bold.className}
+            href="/case-studies/prediko-replenish"
+          >
+            completely redesigning the experience for Prediko
+          </Link>{" "}
+          — a fast-growing e-commerce SaaS tool helping Shopify stores maximise
+          their inventory potential. Prediko is a powerful AI-led optimisation
+          and reporting tool, which shatters the traditional spreadsheet
+          approach and smartly recommends restocking and transfer needs, to
+          optimise spend and minimise sales lost to stockouts. The product has
+          recently joined Shopify&apos;s tech partner list and has been featured
+          by Shopify as a top recommended app for Inventory Management.
         </p>
       </div>
       <DynamicCaseStudies />
